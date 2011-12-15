@@ -43,10 +43,10 @@ void draw()
   }else{
     pt_x = (Integer)points_x.get(0);
     pt_y = (Integer)points_y.get(0);
-  }
+  }  
   
-  int radius = (int)random(15,1);
-  ellipse(pt_y + (int)random(15, -15), pt_y + random(10, -10), radius, radius);
+  int radius = (int)random(1, 15);
+  ellipse(pt_y + (int)random(-15, 15), pt_y + random(-10, 10), radius, radius);
   
   curr_idx++;
   
