@@ -9,6 +9,13 @@ void setup()
   background(16, 1);
   
   setPoints();
+
+  //colorMode(HSB, 360, 100, 100);
+  colorMode(RGB, 255, 255, 255);
+
+  //noStroke();
+
+  smooth(); 
   
   frameRate(10);
 }
@@ -17,10 +24,9 @@ void draw()
 {
   Integer pt_x = 0, pt_y = 0;
   translate(0, d_height);
-  
+
   noFill();
-  stroke(255, 255, 255, 0.5);
-  
+  stroke(255, 255, 255, 50);
   strokeWeight(10);
   
   beginShape();
@@ -35,7 +41,7 @@ void draw()
   
   strokeWeight(1);
   
-  fill(255, 255, 255, 0.5);
+  fill(255, 255, 255, 50);
   
   if(curr_idx > 0){
     pt_x = (Integer)points_x.get(curr_idx - 1);
@@ -43,10 +49,10 @@ void draw()
   }else{
     pt_x = (Integer)points_x.get(0);
     pt_y = (Integer)points_y.get(0);
-  }  
-  
+  } 
+    
   int radius = (int)random(1, 15);
-  ellipse(pt_y + (int)random(-15, 15), pt_y + random(-10, 10), radius, radius);
+  ellipse(pt_x + (int)random(-15, 15), pt_y + random(-10, 10), radius, radius);
   
   curr_idx++;
   
@@ -65,7 +71,7 @@ void setPoints()
   
   int len = d_width - (int)random(d_height/2);
   int p_num = len / 10;
-  print("p_num " + p_num + "\n");
+  //print("p_num " + p_num + "\n");
   
   int step = len / p_num + (int)random(5, 1);
   int start_x = (int)(Math.random() * d_width);
@@ -74,7 +80,7 @@ void setPoints()
   
   for(int i = 0; i < p_num; i++){
     pt_x = start_x + (int)random(-yure, yure);
-    pt_y = step * i;
+    pt_y = -step * i;
     points_x.add(new Integer(pt_x));
     points_y.add(new Integer(pt_y));
     if(i==0){
