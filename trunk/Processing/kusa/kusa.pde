@@ -1,11 +1,9 @@
-int d_width  = 500;
-int d_height = 500;
 ArrayList points_x, points_y;
 int curr_idx = 0;
 
 void setup()
 {
-  size(d_width, d_height);
+  size(640, 480);
   background(16, 1);
   
   setPoints();
@@ -23,11 +21,14 @@ void setup()
 void draw()
 {
   Integer pt_x = 0, pt_y = 0;
-  translate(0, d_height);
+  
+  fill(0, 0, 0, 5); 
+  rect(0, 0, width, height);
+  translate(0, height);
 
   noFill();
   stroke(255, 255, 255, 50);
-  strokeWeight(10);
+  strokeWeight(2);
   
   beginShape();
   for(int i = 0; i < curr_idx; i++){
@@ -41,7 +42,7 @@ void draw()
   
   strokeWeight(1);
   
-  fill(255, 255, 255, 50);
+  fill(255, 255, 255, 100);
   
   if(curr_idx > 0){
     pt_x = (Integer)points_x.get(curr_idx - 1);
@@ -51,7 +52,7 @@ void draw()
     pt_y = (Integer)points_y.get(0);
   } 
     
-  int radius = (int)random(1, 15);
+  int radius = (int)random(1, 25);
   ellipse(pt_x + (int)random(-15, 15), pt_y + random(-10, 10), radius, radius);
   
   curr_idx++;
@@ -69,14 +70,14 @@ void setPoints()
   points_x = new ArrayList();
   points_y = new ArrayList();
   
-  int len = d_width - (int)random(d_height/2);
+  int len = width - (int)random(height/2);
   int p_num = len / 10;
   //print("p_num " + p_num + "\n");
   
   int step = len / p_num + (int)random(5, 1);
-  int start_x = (int)(Math.random() * d_width);
+  int start_x = (int)(Math.random() * width);
   
-  int yure = (int)random(2, 6);
+  int yure = (int)random(6, 2);
   
   for(int i = 0; i < p_num; i++){
     pt_x = start_x + (int)random(-yure, yure);
