@@ -1,5 +1,5 @@
-int ledPin = 3;      // LED connected to digital pin 9
-int analogPin = 0;   // potentiometer connected to analog pin 3
+int ledPin = 9;      // LED connected to digital pin 9
+int analogPin = 3;   // potentiometer connected to analog pin 3
 int val = 0;         // variable to store the read value
 
 float Vdd = 4.79;
