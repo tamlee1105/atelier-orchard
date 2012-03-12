@@ -1,3 +1,23 @@
+const int pin2 = 2;
+const int Blue1 = 3;
+const int pin4 = 4;
+const int Red1 = 5;
+const int Green1 = 6;
+const int White1 = 7;
+const int SPKp = 8;
+const int Blue2 = 9;
+const int Red2 = 10;
+const int Green2 = 11;
+const int White2 = 12;
+const int SPKn = 13;
+const int AI0 = 0;
+const int AI1 = 1;
+const int AI2 = 2;
+const int AI3 = 3;
+const int AI4 = 4;
+const int AI5 = 5;
+
+
 /** G-sensor input 0-255 */
 int front_x = 0, front_y = 0, front_z = 0;
 int rear_x  = 0, rear_y  = 0, rear_z  = 0;
@@ -6,18 +26,21 @@ int rear_x  = 0, rear_y  = 0, rear_z  = 0;
 int front_r = 0, front_g = 0, front_b = 0;
 int rear_r  = 0, rear_g  = 0, rear_b  = 0;
 
-float Vdd = 4.79;
+//float Vdd = 4.79;
+float Vdd = 5.00;
 float Gres = Vdd / 5.0; // [V/g]
 float ofst = Vdd / 2.0;
 
 void setup()
 {
-  pinMode(3, OUTPUT);
-  pinMode(5, OUTPUT);
-  pinMode(6, OUTPUT);
-  pinMode(9, OUTPUT);
-  pinMode(10, OUTPUT);
-  pinMode(11, OUTPUT);
+  pinMode(Blue1, OUTPUT);
+  pinMode(Red1, OUTPUT);
+  pinMode(Green1, OUTPUT);
+  pinMode(Blue2, OUTPUT);
+  pinMode(Red2, OUTPUT);
+  pinMode(Green2, OUTPUT);
+  
+  analogReference(DEFAULT);
 }
 /*
 void loop()
@@ -32,12 +55,12 @@ void loop()
 
 void loop()
 {
-  front_x = analogRead(0);
-  front_y = analogRead(1);
-  front_z = analogRead(2);
-  rear_x  = analogRead(3);
-  rear_y  = analogRead(4);
-  rear_z  = analogRead(5);
+  front_x = analogRead(AI0);
+  front_y = analogRead(AI1);
+  front_z = analogRead(AI2);
+  rear_x  = analogRead(AI3);
+  rear_y  = analogRead(AI4);
+  rear_z  = analogRead(AI5);
   
   front_r = func(front_x);
   front_g = func(front_y);
@@ -46,12 +69,12 @@ void loop()
   rear_g  = func(rear_y);
   rear_b  = func(rear_z);
 
-  analogWrite(3, front_r);
-  analogWrite(5, front_g);
-  analogWrite(6, front_b);
-  analogWrite(9, rear_r);
-  analogWrite(10, rear_g);
-  analogWrite(11, rear_b);
+  analogWrite(Blue1, front_r);
+  analogWrite(Red1, front_g);
+  analogWrite(Green1, front_b);
+  analogWrite(Blue2, rear_r);
+  analogWrite(Red2, rear_g);
+  analogWrite(Green2, rear_b);
 }
 
 int func(int in){
