@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="prepare" name="ycapture">
+	<target name="init">
+		<tstamp />
+	</target>
+	<property name="dir.dist" value="dist" />
+	<property name="version" value="0.1.1" />
+
+	<!-- prepare external libraries -->
+	<target name="prepare" depends="init">
+	</target>
+
+	<!-- build source package -->
+	<target name="build_src" depends="init">
+		<mkdir dir="${dir.dist}/${ant.project.name}-src-${DSTAMP}" />
+
+		<copy todir="${dir.dist}/${ant.project.name}-src-${DSTAMP}">
+			<fileset dir=".">
+				<include name="**" />
+				<exclude name="${dir.dist}" />
+				<exclude name="${dir.dist}/**" />
+				<exclude name="ycapture/Release" />
+				<exclude name="ycapture/Release/**" />
+				<exclude name="ycapture/Debug" />
+				<exclude name="ycapture/Debug/**" />
+				<exclude name="ycapture/*/Release" />
+				<exclude name="ycapture/*/Release/**" />
+				<exclude name="ycapture/*/Debug" />
+				<exclude name="ycapture/*/Debug/**" />
+				<exclude name="*.ncb" />
+				<exclude name="*.bak" />
+				<exclude name="*.BAK" />
+				<exclude name="*.obj" />
+				<exclude name="**/*.ncb" />
+				<exclude name="**/*.user" />
+				<exclude name="**/*.bak" />
+				<exclude name="**/*.BAK" />
+				<exclude name="**/*.obj" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- create source package -->
+	<target name="src" depends="build_src">
+		<zip zipfile="${dir.dist}/${ant.project.name}-src-${DSTAMP}.zip">
+			<fileset dir="${dir.dist}">
+				<include name="${ant.project.name}-src-${DSTAMP}/**" />
+			</fileset>
+		</zip>
+
+		<delete dir="${dir.dist}/${ant.project.name}-src-${DSTAMP}" />
+	</target>
+
+	<!--
+	  リリース用パッケージのビルド。
+	-->
+	<target name="package" depends="src" />
+
+	<!-- build source package -->
+	<target name="build_srcv" depends="init">
+		<mkdir dir="${dir.dist}/${ant.project.name}-src-${version}" />
+
+		<copy todir="${dir.dist}/${ant.project.name}-src-${version}">
+			<fileset dir=".">
+				<include name="**" />
+				<exclude name="${dir.dist}" />
+				<exclude name="${dir.dist}/**" />
+				<exclude name="ycapture/Release" />
+				<exclude name="ycapture/Release/**" />
+				<exclude name="ycapture/Debug" />
+				<exclude name="ycapture/Debug/**" />
+				<exclude name="ycapture/*/Release" />
+				<exclude name="ycapture/*/Release/**" />
+				<exclude name="ycapture/*/Debug" />
+				<exclude name="ycapture/*/Debug/**" />
+				<exclude name="*.ncb" />
+				<exclude name="*.bak" />
+				<exclude name="*.BAK" />
+				<exclude name="*.obj" />
+				<exclude name="*.zte" />
+				<exclude name="**/*.ncb" />
+				<exclude name="**/*.user" />
+				<exclude name="**/*.bak" />
+				<exclude name="**/*.BAK" />
+				<exclude name="**/*.obj" />
+				<exclude name="doc/packages" />
+				<exclude name="doc/packages/**" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- create source package -->
+	<target name="srcv" depends="build_srcv">
+		<zip zipfile="${dir.dist}/${ant.project.name}-src-${version}.zip">
+			<fileset dir="${dir.dist}">
+				<include name="${ant.project.name}-src-${version}/**" />
+			</fileset>
+		</zip>
+
+		<delete dir="${dir.dist}/${ant.project.name}-src-${version}" />
+	</target>
+
+	<!--
+	  リリース用パッケージのビルド。
+	-->
+	<target name="packagev" depends="srcv">
+		<mkdir dir="doc/packages" />
+		<copy todir="doc/packages">
+			<fileset dir="${dir.dist}">
+				<include name="${ant.project.name}*${version}.*" />
+			</fileset>
+		</copy>
+	</target>
+</project>

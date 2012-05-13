@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ycapture", "ycapture\ycapture.vcproj", "{3D0A9889-9EC1-4012-9382-4FE1EB610D17}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ycaptureclient", "ycaptureclient\ycaptureclient.vcproj", "{FAF1F7C3-E103-45DC-975C-A10067B9DF02}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testclient", "testclient\testclient.vcproj", "{BDAC92C1-A2F2-416B-9D8C-05C264B974B8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FAF1F7C3-E103-45DC-975C-A10067B9DF02} = {FAF1F7C3-E103-45DC-975C-A10067B9DF02}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3D0A9889-9EC1-4012-9382-4FE1EB610D17}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3D0A9889-9EC1-4012-9382-4FE1EB610D17}.Debug|Win32.Build.0 = Debug|Win32
+		{3D0A9889-9EC1-4012-9382-4FE1EB610D17}.Release|Win32.ActiveCfg = Release|Win32
+		{3D0A9889-9EC1-4012-9382-4FE1EB610D17}.Release|Win32.Build.0 = Release|Win32
+		{FAF1F7C3-E103-45DC-975C-A10067B9DF02}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FAF1F7C3-E103-45DC-975C-A10067B9DF02}.Debug|Win32.Build.0 = Debug|Win32
+		{FAF1F7C3-E103-45DC-975C-A10067B9DF02}.Release|Win32.ActiveCfg = Release|Win32
+		{FAF1F7C3-E103-45DC-975C-A10067B9DF02}.Release|Win32.Build.0 = Release|Win32
+		{BDAC92C1-A2F2-416B-9D8C-05C264B974B8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BDAC92C1-A2F2-416B-9D8C-05C264B974B8}.Debug|Win32.Build.0 = Debug|Win32
+		{BDAC92C1-A2F2-416B-9D8C-05C264B974B8}.Release|Win32.ActiveCfg = Release|Win32
+		{BDAC92C1-A2F2-416B-9D8C-05C264B974B8}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
