@@ -1,0 +1,159 @@
+
+body {
+	background-color: #333333;
+	font-size: 14px;
+	font-family: Arial;
+	color: #ffffff;
+	margin: 32px;
+}
+
+table {
+	font-size: 14px;
+	font-family: Arial;
+}
+
+td {
+	font-size: 14px;
+	font-family: Arial;
+}
+
+th {
+	font-size: 14px;
+	font-family: Arial;
+}
+
+h1 {
+	margin: 24px;
+	font-size: 32px;
+	border-bottom: 2px solid #dddddd;
+}
+
+h2 {
+	margin: 24px;
+	font-size: 24px;
+	border-bottom: 1px solid #dddddd;
+}
+
+h3 {
+	margin: 28px;
+	font-size: 18px;
+}
+
+p {
+	margin-left: 32px;
+}
+
+div.list {
+	margin-left: 32px;
+}
+
+table.sample {
+	font-size: 14px;
+	color: #444444;
+}
+
+div.sample {
+	margin: 32px;
+	padding: 16px;
+	border: 1px solid #ffffff;
+	background-color: #cccccc;
+	color: #444444;
+}
+
+div.subsection {
+	margin-left: 32px;
+}
+
+div.ch {
+	filter: alpha(opacity=0);
+	-moz-opacity: 0.0;
+	opacity: 0.0;
+	font-weight: bold;
+}
+
+div.code_index {
+	margin: 8px 8px 8px 32px;
+	padding: 8px;
+	border: 1px solid #000000;
+	background-color: #888888;
+	font-family: Courier;
+	font-size: 12px;
+	color: #222222;
+}
+
+table.functions {
+	margin: 8px 8px 8px 48px;
+	border-right: 1px solid #666666;
+	font-size: 14px;
+	font-family: Arial;
+}
+
+table.functions th {
+	background-color: #2255cc;
+	color: #ffffff;
+	border-right: 1px solid #222222;
+	border-bottom: 1px solid #222222;
+	border-top: 1px solid #222222;
+	padding: 4px;
+}
+
+.leftmost {
+	border-left: 1px solid #222222;
+}
+
+table.functions td {
+	background-color: #bbddee;
+	color: #222222;
+	border-right: 1px solid #222222;
+	border-bottom: 1px solid #222222;
+	padding: 4px;
+}
+
+div.code {
+	margin: 8px 8px 8px 48px;
+	padding: 8px;
+	border: 1px solid #ffffff;
+	background-color: #111111;
+	font-family: Courier;
+	font-size: 12px;
+	color: #ffffff;
+}
+
+div.code-scroll {
+	margin: 8px 8px 8px 48px;
+	padding: 8px;
+	border: 1px solid #ffffff;
+	background-color: #111111;
+	font-family: Courier;
+	font-size: 12px;
+	color: #ffffff;
+	overflow: auto;
+	width: 480px;
+	height: 365px;
+}
+
+pre {
+	background-color: #222222;
+	font-family: Courier;
+	font-size: 12px;
+	color: #ffffff;
+}
+
+div.navi {
+	text-align: left;
+	margin-left: 32px;
+}
+
+.version {
+	font-size: 14px;
+}
+
+a:visited {
+	color: #cc44ff;
+}
+
+a:link {
+	color: #88aaff;
+}
+
+

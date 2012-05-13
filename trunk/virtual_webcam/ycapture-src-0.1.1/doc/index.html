@@ -1,0 +1,161 @@
+<html>
+    <head>
+        <title>ycapture(わいきゃぷちゃ)</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="STYLESHEET" href="default.css" type="text/css">
+    </head>
+    <body>
+<h1>ycapture(わいきゃぷちゃ) <span class="version">version 0.1.1</span></h1>
+<div class="list"><ul>
+<li><a href="#about">ycapture(わいきゃぷちゃ)ってなに？</a></li>
+<li><a href="#download">ダウンロード</a></li>
+<li><a href="#usage">使い方</a></li>
+<li><a href="#todo">TODO</a></li>
+<li><a href="#history">変更履歴</a></li>
+</ul></div>
+<h2><a name="about">ycapture(わいきゃぷちゃ)ってなに？</a></h2>
+<p><strong style="color: red;">とりあえず公開版ですのでドキュメントなどは作り途中です。ご了承ください。</strong></p>
+<p></p>
+<table border="0"><tr>
+<td valign="top">
+<p><img src="images/screenshot.jpg" width="335" height="230"></p>
+</td>
+<td valign="top">
+<p>ycaptureとは、WindowsのVideo Capture Sourceのような振る舞いをするDLL(の基本ソース)です。このDLLを使用すると、あたかもビデオキャプチャデバイスのように、任意のプログラムからビデオデータを供給することができます。</p>
+<p></p>
+<p>このDLLを利用すれば、YouTubeやUstreamのような、Webカメラから配信することを想定したツールで任意のビデオデータを利用することができるようになります。</p>
+<p></p>
+<p>もともと、<a href="http://yzwlab.net/argil/">ARgil</a>の実行経過を（スクリーンショット撮影ツールのようなものを使用せずに）配信するために作成したものです。もし何かのお役に立てればと思い公開しました。マニュアル等は不十分な点が多いですが、さほど大きくないプログラムですのでコードの断片など参考になれば。</p>
+</td>
+</tr></table>
+<h2><a name="download">ダウンロード</a></h2>
+<p>ycaptureはソースコードによる提供のみとなります。利用用途に応じて書き換え、ビルドしてお使いください。</p>
+<p></p>
+<h3>ライセンス</h3>
+<div class="subsection">
+<p>このライブラリは<a href="http://opensource.org/licenses/mit-license.php">MIT Licence</a>(<a href="http://sourceforge.jp/projects/opensource/wiki/licenses/MIT_license">日本語訳</a>)に基づき配布をおこなっています。</p>
+<p>もし使用してくださる方がおられる場合は、以下の点にご注意ください。</p>
+<div class="list"><ul>
+<li>このライブラリはyacchin(谷沢 智史)が趣味で作成したものです。著作権はyacchinに帰属するものとします。
+</li>
+<li>ある程度テストはおこなっていますが、趣味の範囲内でおこなっているため、何らかのバグが残ってしまっているおそれがあります。<br>著作権者は、契約行為、不法行為、またはそれ以外であろうと、ソフトウェアに起因または関連し、あるいはソフトウェアの使用またはその他の扱いによって生じる一切の請求、損害、その他の義務について何らの責任も負わないものとします。
+</li>
+<li>本ソフトウェアおよび関連文書のファイルの複製を取得するすべての人に対し、ソフトウェアを無制限に扱うことを無償で許可します。<br>ただし、上記免責事項への同意、および著作権表示および本許諾表示を、ソフトウェアのすべての複製または重要な部分へ記載することをお願いいたします。
+</li>
+<li>何かお問い合わせは (メール) yazawa あっと yzwlab.net  もしくは (Twitter) <a href="http://twitter.com/yacchin1205">@yacchin1205</a> まで。<br>作者多忙のため、すぐには回答できない場合がありますのでその点はご了承ください。また、使用してくださる場合などは一言教えていただけるとすごく喜びます。
+</li>
+</ul></div>
+<p>実装にあたっては<a href="http://stackoverflow.com/">Stack Overflow</a>、特に<a href="http://tmhare.mvps.org/">The March Hare's web site</a>といった情報源に非常に助けられました。より詳しく知りたい場合はこれらのサイトを参考にしてください。</p>
+</div>
+<h3>ダウンロード</h3>
+<div class="subsection">
+<p><a href="packages/ycapture-src-0.1.1.zip">ycapture-src-0.1.1.zip</a></p>
+<p></p>
+<p>変更点(0.1.0→0.1.1)：</p>
+<div class="list"><ul>
+<li>Flash Media Live Encoderなどで使用できるようにIAMStreamConfigインタフェースを実装しました。
+</li>
+</ul></div>
+<p>過去のバージョン：</p>
+<div class="list"><ul>
+<li>version 0.1.0
+<div><a href="packages/ycapture-src-0.1.0.zip">ycapture-src-0.1.0.zip</a></div>
+</li>
+</ul></div>
+</div>
+<h3>動作チェック環境</h3>
+<div class="subsection">
+<div class="list"><ul>
+<li>Windows SDK for Windows Server 2008 and .NET Framework 3.5
+<div>ycaptureはWindows SDKサンプルのうち、DirectShow BaseClassesを利用します。作業手順に従い、ビルドした上でご利用ください。</div>
+<div>作者の環境では、C:\Program Files\Microsoft SDKs\Windows\v6.1\Samples\Multimedia\DirectShow\BaseClasses に配置しています。</div>
+</li>
+<li>Visual Studio 2008 Standard Edition
+<div>本コードはC++を利用して記述されています。</div>
+</li>
+</ul></div>
+</div>
+<h2><a name="usage">使い方</a></h2>
+<h3>プロジェクト構成</h3>
+<div class="subsection">
+<div class="list"><ul>
+<li><strong>ycapture</strong>
+<div>キャプチャフィルタDLLです。</div>
+<div>このDLLをビルドし、regsvr32コマンドで登録処理をおこなうと、このDLLがWindowsにVideo Capture Sourceとして認識されるようになります。</div>
+</li>
+<li><strong>ycaptureclient</strong>
+<div>キャプチャフィルタDLLに画像データを供給するための静的ライブラリです。</div>
+<div>このライブラリ内のCaptureSenderクラスを使用すると簡単にキャプチャフィルタDLLにデータを供給することができます。</div>
+</li>
+<li><strong>testclient</strong>
+<div>ycaptureclientライブラリの使用例です。</div>
+<div>使用例がコマンドラインアプリケーションとして実装されています。</div>
+</li>
+</ul></div>
+</div>
+<h3>必要な作業</h3>
+<div class="subsection">
+<div class="list"><ul>
+<li>Windows SDKの用意・BaseClassesのビルド
+<div>MicrosoftからWindows SDKをダウンロードし、Samples\Multimedia\DirectShow\BaseClassesをビルドしてください。</div>
+<div><br></div>
+</li>
+<li>フィルタ名、CLSIDなどの変更
+<div>ycaptureプロジェクトのycapture.hにフィルタ名、CLSIDなどの定義が記述されています。</div>
+<div class="code">
+#pragma&nbsp;once<br><br>//&nbsp;ycapture.h&nbsp;:&nbsp;フィルタの情報定義<br><br>//&nbsp;ここは自分の製品に合わせて変更すること<br><br>//&nbsp;フィルタ名定義<br>#define&nbsp;NAME_CAPTURESOURCE&nbsp;L"ARgil&nbsp;Capture&nbsp;Source"<br><br>//&nbsp;{5C2CD55C-92AD-4999-8666-912BD3E70001}<br>DEFINE_GUID(CLSID_CaptureSource,&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;0x5c2cd55c,&nbsp;0x92ad,&nbsp;0x4999,&nbsp;0x86,&nbsp;0x66,&nbsp;0x91,&nbsp;0x2b,&nbsp;0xd3,&nbsp;0xe7,&nbsp;0x0,&nbsp;0x1);<br><br>//&nbsp;イベント・メモリマップドファイル名定義<br>//&nbsp;フィルタ側・送信側で同一の名前を使用すること<br><br>//&nbsp;書き込みを示すイベント名<br>#define&nbsp;CS_EVENT_WRITE&nbsp;&nbsp;&nbsp;&nbsp;L"ARgil_CaptureSource_Write"<br>//&nbsp;データ読み込みを示すミューテックス名<br>#define&nbsp;CS_EVENT_READ&nbsp;&nbsp;&nbsp;&nbsp;L"ARgil_CaptureSource_Read"<br>//&nbsp;共有データファイル名(メモリマップドファイル)<br>#define&nbsp;CS_SHARED_PATH&nbsp;&nbsp;&nbsp;&nbsp;L"ARgil_CaptureSource_Data"<br>
+</div>
+<div>ダウンロード時点での内容はARgil用のものとなっていますので、各定義を書き換えてください。</div>
+<div>この内容を書き換えないと、ARgilと競合を起こす場合があります。</div>
+<div><br></div>
+</li>
+<li>ycaptureプロジェクトのビルド
+<div>プロジェクトプロパティにWindows SDKのパスを指定し（作者と全く同じパスにWindows SDKをインストールした場合は不要）、ycaptureプロジェクトをビルドします。</div>
+<div><br></div>
+</li>
+<li>ycaptureclientプロジェクトのビルド
+<div>ycaptureclientプロジェクトをビルドします。</div>
+<div><br></div>
+</li>
+<li>画像供給処理の実装
+<div>ycaptureclientライブラリを使用し、画像供給処理を実装します。</div>
+<div>testclientプロジェクトを参考にしてください。</div>
+<div><br></div>
+</li>
+<li>ycapture.dllの登録
+<div>regsvr32 (ビルドされたycapture.dllのパス)を実行し、Windowsにycapture.dllを登録してください。</div>
+<div>正常に実施できた場合、UstreamやYouTube撮影時のビデオソースとして「(ycapture.hに指定したフィルタ名)」が追加されるようになります。</div>
+</li>
+</ul></div>
+</div>
+<h3>実行手順</h3>
+<div class="subsection">
+<p>ycapture.dllが提供するVideo Capture Sourceと画像供給処理の実行順序などに特に制限はありません。ycapture.hの定義に従いオブジェクトを生成し、これらを共有して処理を行ないます。</p>
+<p>ycapture.dllの上書きなどができない場合は、ブラウザなどがDLLへの参照を保持してしまっている可能性があります。ブラウザの終了などで対処してください。</p>
+</div>
+<h2><a name="todo">TODO</a></h2>
+<div class="list"><ul>
+<li>解像度など設定の変更ができるようにしたい
+</li>
+<li>これ使って色々配信にチャレンジしてみる
+</li>
+<li>もうちょっとドキュメントを充実させる
+</li>
+</ul></div>
+<h2><a name="history">変更履歴</a></h2>
+<div class="list"><ul>
+<li>2010/09/18 - version 0.1.1をリリース
+<div class="list"><ul>
+<li>Flash Media Live Encoderなどで使用できるようにIAMStreamConfigインタフェースを実装しました。
+</li>
+</ul></div>
+</li>
+<li>2010/09/13 - とりあえずのversion 0.1.0公開
+</li>
+</ul></div>
+    <p><br></p>
+    <hr>
+    <div>Copyright(C) 2010 やざわラボ</div>
+    <div align="right">Powered by <a href="http://beitel.carabiner.jp">Carabiner BEITEL</a></div>
+    </body>
+</html>
