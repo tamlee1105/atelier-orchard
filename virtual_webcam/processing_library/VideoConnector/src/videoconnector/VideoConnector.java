@@ -10,10 +10,11 @@ public class VideoConnector {
     public VideoConnector(PApplet parent) {
         this.parent = parent;
         this.jni    = new VideoConnecotorJni();
+        jni.nativeInitialize(parent.width, parent.height);
         parent.registerPost(this);
     }
 
     public void post() {
-    	jni.nativeAddFrame(parent.pixels);
+    	jni.nativeAddFrame( parent.frameRate, parent.pixels);
     }
 }

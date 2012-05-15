@@ -6,7 +6,7 @@
 #include <ycapture.h>
 
 #define WIDTH	640
-#define HEIGHT	200
+#define HEIGHT	480
 
 // テスト処理を実行します。
 int _tmain(int argc, _TCHAR* argv[])
