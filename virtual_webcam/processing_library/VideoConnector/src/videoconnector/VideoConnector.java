@@ -15,6 +15,9 @@ public class VideoConnector {
     }
 
     public void post() {
-    	jni.nativeAddFrame( parent.frameRate, parent.pixels);
+    	parent.loadPixels();
+    	if(parent.pixels != null){
+    		jni.nativeAddFrame( parent.frameRate, parent.pixels);
+    	}
     }
 }

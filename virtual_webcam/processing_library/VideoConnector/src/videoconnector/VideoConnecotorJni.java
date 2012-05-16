@@ -2,7 +2,7 @@ package videoconnector;
 
 public class VideoConnecotorJni {
 	static{
-		System.loadLibrary( "ycapture" );
+		System.loadLibrary( "videoconnector" );
 	}
 
 	public native void nativeInitialize(int width, int height);
