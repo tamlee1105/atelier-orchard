@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\extern\inc"
+				AdditionalIncludeDirectories="..\extern\inc; C:\Program Files\Java\jdk1.6.0_25\include; C:\Program Files\Java\jdk1.6.0_25\include\win32"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -117,7 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\extern\inc"
+				AdditionalIncludeDirectories="..\extern\inc; C:\Program Files\Java\jdk1.6.0_25\include; C:\Program Files\Java\jdk1.6.0_25\include\win32"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -197,10 +197,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\videoconnector.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\videoconnector_VideoConnecotorJni.cpp"
 				>
 			</File>
@@ -216,10 +212,6 @@
 			</File>
 			<File
 				RelativePath=".\targetver.h"
-				>
-			</File>
-			<File
-				RelativePath=".\videoconnector.h"
 				>
 			</File>
 			<File
