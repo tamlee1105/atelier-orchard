@@ -1,5 +1,8 @@
 ArrayList points_x, points_y;
+import videoconnector.*;
+
 int curr_idx = 0;
+VideoConnector vc;
 
 void setup()
 {
@@ -16,6 +19,8 @@ void setup()
   smooth(); 
   
   frameRate(10);
+  
+  vc = new VideoConnector(this);
 }
 
 void draw()
