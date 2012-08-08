@@ -28,18 +28,16 @@ const int IDX_WAVE   = 2;
 int vr_new_4051[8];
 int vr_new_fadeout;
 int vr_new_speed;
-int vr_new_position;
+int vr_new_xfader;
 int sw_new_transA;
 int sw_new_transB;
-int vr_new_xfader;
 
 int vr_4051[8];
 int vr_fadeout;
 int vr_speed;
-int vr_position;
+int vr_xfader;
 int sw_transA;
 int sw_transB;
-int vr_xfader;
 
 const int cc_4051[]   = {10,11,91,93,73,72,74,71};
 const int cc_fadeout  = 75;
@@ -154,7 +152,8 @@ void loop(){
         sw_transA = sw_new_transA;
         sw_transB = sw_new_transB;
         vr_xfader = vr_new_xfader;
-        if(sw_transA == HIGH){
+        if(sw_transA == HIGH && sw_transB == HIGH){
+        }else if(sw_transA == HIGH){
           MIDI.sendControlChange(cc_xfader, 127, midiCh);
           //Serial.print(127);
           //Serial.print("\n");
