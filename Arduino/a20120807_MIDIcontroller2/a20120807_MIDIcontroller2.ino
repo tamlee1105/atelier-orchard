@@ -77,7 +77,7 @@ void setup(){
 void loop(){
   // led
   ++led_val;
-  if(led_val & 0x20){
+  if(led_val & 0x10){
     digitalWrite(d_out_led, LOW);
   }else{
     digitalWrite(d_out_led, HIGH);
@@ -168,54 +168,4 @@ void loop(){
         }
     }
   }
-  
-  /*{
-    for(int i = 0; i < 8; ++i){
-      if(vr_4051[i] != vr_new_4051[i]){
-        vr_4051[i] = vr_new_4051[i];
-        Serial.print(vr_4051[i]);
-        Serial.print(" ");
-        Serial.print("\n");
-      }
-    }
-    
-    if(vr_fadeout != vr_new_fadeout){
-        vr_fadeout = vr_new_fadeout;
-        Serial.print(vr_fadeout);
-        Serial.print(" ");
-        Serial.print("\n");
-    }
-    
-    if(vr_speed != vr_new_speed){
-        vr_speed = vr_new_speed;
-        Serial.print(vr_speed);
-        Serial.print(" ");
-        Serial.print("\n");
-    }
-    
-    if(vr_position != vr_new_position){
-        vr_position = vr_new_position;
-        Serial.print(vr_position);
-        Serial.print(" ");
-        Serial.print("\n");
-    }
-    
-    if(sw_transA != sw_new_transA || sw_transB != sw_new_transB || vr_xfader != vr_new_xfader){
-        sw_transA = sw_new_transA;
-        sw_transB = sw_new_transB;
-        vr_xfader = vr_new_xfader;
-        if(sw_transA == HIGH){
-          Serial.print(127);
-          Serial.print(" ");
-        }else if(sw_transB == HIGH){
-          Serial.print(0);
-          Serial.print(" ");
-        }else{
-          Serial.print(vr_xfader);
-          Serial.print(" ");
-        }
-        Serial.print("\n");
-    }
-  }*/
-  delay(20);
 }
