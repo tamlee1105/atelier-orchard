@@ -29,6 +29,13 @@ const int IDX_RGB    = 0;
 const int IDX_GLITCH = 1;
 const int IDX_WAVE   = 2;
 
+/* MIDI ControlChange constants */
+const int cc_4051[]   = {10,11,91,93,73,72,74,71};
+const int cc_fadeout  = 75;
+const int cc_speed    = 76;
+const int cc_position = 77;
+const int cc_xfader   = 78;
+
 int vr_new_4051[8];
 int vr_new_fadeout;
 int vr_new_speed;
@@ -45,18 +52,11 @@ int sw_transA;
 int sw_transB;
 unsigned char re_pos;
 
-const int cc_4051[]   = {10,11,91,93,73,72,74,71};
-const int cc_fadeout  = 75;
-const int cc_speed    = 76;
-const int cc_position = 77;
-const int cc_xfader   = 78;
-
 int midiCh = 1;
 int led_val = 0;
+volatile int new_D, old_D, D;
 
 void updateRotaryValue(){
-    volatile int new_D, old_D, D;
-    
     new_D = 0x0;
     if(digitalRead(d_in_rotaryA) == HIGH){
       new_D |= 0x1;
@@ -64,8 +64,8 @@ void updateRotaryValue(){
     if(digitalRead(d_in_rotaryB) == HIGH){
       new_D |= 0x2;
     }
-    
-    D = ((old_D << 1) + new_D) & 0x2;
+    D = bitRead((old_D << 1) + new_D, 2);
+    //D = ((old_D << 1) + new_D) & 0x2;
     if(D == 0x0){ // CW
         --re_new_pos;
     }else if(D == 0x2){ // CCW
@@ -75,6 +75,38 @@ void updateRotaryValue(){
     old_D = new_D;
 }
 
+void re_change_A(){
+  if (digitalRead(d_in_rotaryA) == HIGH) { 
+    if (digitalRead(d_in_rotaryB) == LOW) {  
+      ++re_new_pos;         // CW
+    } else {
+      --re_new_pos;         // CCW
+    }
+  } else { 
+    if (digitalRead(d_in_rotaryB) == HIGH) {  
+      ++re_new_pos;         // CW
+    } else {
+      --re_new_pos;         // CCW
+    }
+  }
+}
+
+void re_change_B(){
+  if (digitalRead(d_in_rotaryB) == HIGH) {
+    if (digitalRead(d_in_rotaryA) == HIGH) {  
+      ++re_new_pos;         // CW
+    } else {
+      --re_new_pos;         // CCW
+    }
+  } else { 
+    if (digitalRead(d_in_rotaryA) == LOW) {   
+      ++re_new_pos;          // CW
+    } else {
+      --re_new_pos;          // CCW
+    }
+  }
+}
+
 void setup(){
   pinMode(d_out_4051C, OUTPUT); // A
   pinMode(d_out_4051B, OUTPUT); // B
@@ -82,22 +114,22 @@ void setup(){
   pinMode(d_out_led, OUTPUT); // C
   pinMode(d_in_transA, INPUT);  // 
   pinMode(d_in_transB, INPUT);  // 
-  pinMode(d_in_rotalyA, INPUT);
-  pinMode(d_in_rotalyB, INPUT);
+  pinMode(d_in_rotaryA, INPUT);
+  pinMode(d_in_rotaryB, INPUT);
   
   re_pos = re_new_pos = 0;
   old_D = 0x0;
-  if(digitalRead(d_in_rotalyA) == HIGH){
+  if(digitalRead(d_in_rotaryA) == HIGH){
     old_D |= 0x1;
   }
-  if(digitalRead(d_in_rotalyB) == HIGH){
+  if(digitalRead(d_in_rotaryB) == HIGH){
     old_D |= 0x2;
   }
   
-  attachInterrupt(interrupt_rotaryA, updateRotaryValue, CHANGE);
-  attachInterrupt(interrupt_rotaryB, updateRotaryValue, CHANGE);
+  attachInterrupt(interrupt_rotaryA, re_change_A, CHANGE);
+  attachInterrupt(interrupt_rotaryB, re_change_B, CHANGE);
 
-  MIDI.begin(1);
+  MIDI.begin(midiCh);
   //Serial.begin(9600);
 }
 
@@ -113,9 +145,12 @@ void loop(){
   // data read 
   {
     for(int i = 0; i < 8; ++i){
-      digitalWrite(d_out_4051A, (i>>2) & 0x1);
-      digitalWrite(d_out_4051B, (i>>1) & 0x1);
-      digitalWrite(d_out_4051C,  i     & 0x1);
+      int r2 = bitRead(i, 2);
+      int r1 = bitRead(i, 1);
+      int r0 = bitRead(i, 0);
+      digitalWrite(d_out_4051A, r2);
+      digitalWrite(d_out_4051B, r1);
+      digitalWrite(d_out_4051C, r0);
       vr_new_4051[i] = analogRead(a_in_4051)   >> 3;
     }
     vr_new_fadeout  = analogRead(a_in_fade)    >> 3;
