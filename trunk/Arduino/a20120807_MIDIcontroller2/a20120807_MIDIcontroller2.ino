@@ -54,7 +54,7 @@ unsigned char re_pos;
 
 int midiCh = 1;
 int led_val = 0;
-volatile int new_D, old_D, D;
+/*volatile int new_D, old_D, D;
 
 void updateRotaryValue(){
     new_D = 0x0;
@@ -73,7 +73,7 @@ void updateRotaryValue(){
     }
     
     old_D = new_D;
-}
+}*/
 
 void re_change_A(){
   if (digitalRead(d_in_rotaryA) == HIGH) { 
@@ -118,13 +118,13 @@ void setup(){
   pinMode(d_in_rotaryB, INPUT);
   
   re_pos = re_new_pos = 0;
-  old_D = 0x0;
+  /*old_D = 0x0;
   if(digitalRead(d_in_rotaryA) == HIGH){
     old_D |= 0x1;
   }
   if(digitalRead(d_in_rotaryB) == HIGH){
     old_D |= 0x2;
-  }
+  }*/
   
   attachInterrupt(interrupt_rotaryA, re_change_A, CHANGE);
   attachInterrupt(interrupt_rotaryB, re_change_B, CHANGE);
