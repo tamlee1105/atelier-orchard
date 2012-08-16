@@ -4,12 +4,12 @@ int att = 15; // pixel attenuation
 int occ = 0;  // occurrence probability in percent
 
 void setup() {
-  colorMode(RGB, 256);
+  colorMode(HSB, 360, 100, 100);
   size( 320, 240 );
   frameRate(30);
   particles = new ArrayList<Particle>();
   for ( int i = 0; i < 1; i++ ) {
-    particles.add(new Particle(width / 2 + 100, height / 2, PI/10f, PI/10f));
+    particles.add(new Particle(width / 2, height / 2, 100, PI/30f, PI/30f));
   }
   bg = createImage(width, height, RGB);
 }
@@ -22,11 +22,9 @@ void draw() {
   for (int y = 0; y < height; ++y ) {
     for (int x = 0; x < width; ++x ) {
       color p = bg.get(x, y);
-      p = color(red(p)-att, green(p)-att, blue(p)-att); // アルファにしたい
+      p = color(hue(p), saturation(p), brightness(p)-att); // アルファにしたい
       for (Particle particle : particles) {
-        int dx = x - (int)particle.x;
-        int dy = y - (int)particle.y;
-        p = particle.eval(p, dx * dx + dy * dy);
+        p = particle.eval(x, y, p);
       }
       bg.set(x, y, p);
     }
@@ -44,35 +42,41 @@ void draw() {
   image(bg, 0, 0);
 }
 
-
 class Particle{
   float x, y;
-  float vx, vy;
-  float r, g, b;
+  float c_x, c_y;
+  float r;
+  float av_x, av_y;
+  float diag_sq;
   
-  Particle(float x, float y, float vx, float vy){
-    this.x = x;
-    this.y = y;
-    this.vx = vx;
-    this.vy = vy;
-    this.r = .3f;
-    this.g = .5f;
-    this.b = .7f;
+  Particle(float c_x, float c_y, int r, float av_x, float av_y){
+    this.c_x = c_x;
+    this.c_y = c_y;
+    this.r = r;
+    this.x = - this.r + this.c_x;
+    this.y = this.c_y;
+    this.av_x = av_x;
+    this.av_y = av_y;
+    this.diag_sq = (width * width + height * height);
+    //println(" " + this.x + " " + this.y + " " + this.c_x + " " + this.c_y + " " + this.diag_sq);
   }
   void update(int t){
-    println(" " + (int)(35 * -sin(this.vx * t)) + " " + (int)(35 * -cos(this.vy * t)));
-    this.x += 35 * -sin(this.vx * t);
-    this.y += 35 * -cos(this.vy * t);
+    //println(" " + (int)(35 * -sin(this.av_x * t)) + " " + (int)(35 * -cos(this.av_y * t)));
+    this.x += this.av_x * r * sin(this.av_x * t);
+    this.y += this.av_y * r * -cos(this.av_y * t);
     //println(" " + (int)(this.x) + " " + (int)(this.y));
   }
   
-  color eval(color c, float r2){
-    if(r2 == 0) return color(255, 255, 255);
-    else return c;
-    /*if(r2 > 20000){
+  color eval(int x, int y, color c){
+    /*if(x == (int)this.x && y == (int)this.y) return color(0, 0, 100);
+    else return c;*/
+    float dx = this.x - x;
+    float dy = this.y - y;
+    float r2 = dx * dx + dy * dy;
+    if(r2 > 20000){
       return c;
     }
-    float a = (float)Math.sqrt(250000/r2);
-    return color(a * this.r + red(c), a * this.g + green(c), a * this.b + blue(c));*/
+    float a = (float)Math.sqrt(this.diag_sq/r2);
+    return color(180, 5 + saturation(c), a + brightness(c));
   }
 }
