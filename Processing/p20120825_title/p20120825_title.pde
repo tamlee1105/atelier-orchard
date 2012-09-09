@@ -1,22 +1,22 @@
 import processing.video.*;
-MovieMaker mm;
-ArrayList<ULine> underLines;
-ArrayList<Title> titles;
-String t_string = "Traffic";
-boolean still;
-float speed_title;
-int state;
-int turn = 8;
+
+MovieMaker       mm;
+ArrayList<ULine> underLines;            // 下線
+ArrayList<Title> titles;                // テキスト
+boolean          still;                 // 静止(Spaceキーで切替可)
+float            title_speed;           // 速さ
+int              state;
+String           t_string  = "Traffic"; // テキストの内容
+int              repeat    = 8;         // 繰り返し回数
+final boolean    dump      = true;      // 動画ダンプ
+String           font_name = "BroadwayBT-Regular"; // フォント名
 
 void setup() {
   size(640, 480);
   frameRate(30);
   colorMode(HSB, 360, 100, 100);
-  //font = createFont("AcademyEngravedLetPlain", 20, true);
-  //smooth();
   underLines = new ArrayList<ULine>();
-  titles = new ArrayList<Title>();
-  //font = createFont("HGSKyokashotai", 20, true);
+  titles     = new ArrayList<Title>();
   for(int i = 0; i < 2; ++i){
     int t = ((int)random(0xFF) & 0x1) == 0x0 ? 1: -1;
     int y = (int)random(20, height);
@@ -25,24 +25,24 @@ void setup() {
     underLines.add(new ULine(width, y, width, y, -50f, speed_y, color(0, 0, 100), b));
     titles.add(new Title(width, y, -50f, speed_y, 7*b));
   }
-  still = false;
-  speed_title = 0f;
-  state = 0;
+  still       = false;
+  title_speed = 0f;
+  state       = 0;
   smooth();
-  if(turn > 0) mm = new MovieMaker(this, width, height, "title_11.mov", 30, MovieMaker.CINEPAK, MovieMaker.BEST);
+  if(repeat > 0 && dump){
+    mm = new MovieMaker(this, width, height, "title.mov", 30, MovieMaker.CINEPAK, MovieMaker.BEST);
+  }
 }
 
 void draw() {
-  if(still) return;
+  if(still){
+    return;
+  }
   
   ArrayList<ULine> invalid_ulines = new ArrayList<ULine>();
   ArrayList<Title> invalid_titles = new ArrayList<Title>();
   
   background(0, 0, 0);
-  //fill(color((int)random(180, 195), 80, 100));
-  //textFont(font);
-  //textSize(text_size);
-  
   
   /* renew */
   for(ULine uline : underLines){
@@ -56,20 +56,17 @@ void draw() {
   }
   
   for(Title title : titles){
-    title.draw(speed_title);
-    //if(title.x + textWidth(t_string) <= 0){
-    //   invalid_titles.add(title);
-    //}
+    title.draw(title_speed);
   }
-  //for (Title invalid_title : invalid_titles) {
-  //  titles.remove(titles.indexOf(invalid_title));
-  //}
-  mm.addFrame();
+  
+  if(dump){
+    mm.addFrame();
+  }
   
   switch(state){
     case 0:
       if(underLines.get(0).ex <= 0){
-        speed_title = 1f;
+        title_speed = 1f;
         state = 1;
       }
       break;
@@ -77,14 +74,14 @@ void draw() {
       for(ULine uline : underLines){
         uline.setStill(true);
       }
-      if(titles.get(0).x <= (width/* - textWidth(t_string)*/)/2){
-        speed_title = 0.06;
+      if(titles.get(0).x <= width/2){
+        title_speed = 0.06;
         state = 2;
       }
       break;
     case 2:
       if(titles.get(0).x <= 10){
-        speed_title = 1f;
+        title_speed = 1f;
         state = 3;
       }
       break;
@@ -101,7 +98,6 @@ void draw() {
       state = 5;
       break;
     case 5:
-      /* addition */
       if(underLines.size() == 0){
         titles.clear();
         for(int i = 0; i < 2; ++i){
@@ -112,11 +108,13 @@ void draw() {
           underLines.add(new ULine(width, y, width, y, -50f, speed_y, color(0, 0, 100), b));
           titles.add(new Title(width, y, -50f, speed_y, 7*b));
         }
-        speed_title = 0f;
+        title_speed = 0f;
         state = 0;
-        --turn;
-        if(0 >= turn){
-          mm.finish();  // Finish the movie if space bar is pressed!
+        --repeat;
+        if(0 >= repeat){
+          if(dump){
+            mm.finish();
+          }
           exit();
         }
       }
@@ -138,7 +136,7 @@ class Title {
     this.speed_y = speed_y;
     this.angle = atan2(-speed_y, -speed_x);
     this.t_size = t_size;
-    this.font = createFont("BroadwayBT-Regular", this.t_size, true);
+    this.font = createFont(font_name, this.t_size, true);
   }
   
   void draw(float ax){
