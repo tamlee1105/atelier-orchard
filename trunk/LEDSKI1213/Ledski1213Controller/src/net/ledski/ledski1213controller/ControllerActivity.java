@@ -40,7 +40,7 @@ public class ControllerActivity extends Activity {
     // Bluetooth
     private String               mConnectedDeviceName      = null; /**< Name of the connected device */
     //private ArrayAdapter<String> mConversationArrayAdapter;        /**< Array adapter for the conversation thread */
-    private StringBuffer         mOutStringBuffer;                 /**< String buffer for outgoing messages */
+    private StringBuffer         mOutStringBuffer;                 /**< String buffer for outgoing messages TODO: たぶんいらない */
     private BluetoothAdapter     mBluetoothAdapter         = null; /**< Local Bluetooth adapter */
     private BluetoothChatService mChatService = null;              /**< Member object for the chat services */
 
@@ -223,13 +223,16 @@ public class ControllerActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
         case R.id.menu_settings:
+            intent = new Intent(this, PreferenceActivity.class);
+            startActivity(intent);
             return true;
         case R.id.menu_scan:
             // Launch the DeviceListActivity to see devices and do scan
-            Intent serverIntent = new Intent(this, DeviceListActivity.class);
-            startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+            intent = new Intent(this, DeviceListActivity.class);
+            startActivityForResult(intent, REQUEST_CONNECT_DEVICE);
             return true;
         case R.id.menu_discoverable:
             // Ensure this device is discoverable by others
@@ -253,8 +256,8 @@ public class ControllerActivity extends Activity {
 
         @Override
         public void onClick(View view) {
-            // TODO 自動生成されたメソッド・スタブ
-
+            //sendMessage("点灯/消灯ボタンが押された\r\n");
+            sendCommand(new byte[]{(byte) mShared.getInt("power_on_address", getResources().getInteger(R.integer.default_power_on_address)), (byte) mShared.getInt("power_on_data", getResources().getInteger(R.integer.default_power_on_data))});
         }
     };
 
@@ -378,6 +381,25 @@ public class ControllerActivity extends Activity {
             mOutStringBuffer.setLength(0);
             //mOutEditText.setText(mOutStringBuffer);
         }
+    }
+
+    private void sendCommand(byte[] command){
+        // Check that we're actually connected before trying anything
+        if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED) {
+            Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Check that there's actually something to send
+        if (command.length > 1) {
+            // Get the message bytes and tell the BluetoothChatService to write
+            mChatService.write(command);
+
+            // Reset out string buffer to zero and clear the edit text field
+            mOutStringBuffer.setLength(0);
+            //mOutEditText.setText(mOutStringBuffer);
+        }
+
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
