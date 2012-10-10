@@ -1,14 +1,108 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentTop="true"
+    android:stretchColumns="1,2">
+<!--
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+     -->
 
-    <TextView
-        android:layout_width="wrap_content"
+    <TableRow
+        android:id="@+id/tableRowLabels"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/hello_world"
-        tools:context=".PreferenceActivity" />
+        android:gravity="center_vertical|left" >
 
-</RelativeLayout>
+        <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         tools:context=".PreferenceActivity" />
+
+        <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="@string/label_text_address"
+         android:gravity="center"
+         tools:context=".PreferenceActivity" />
+
+        <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="@string/label_text_data"
+         android:gravity="center"
+         tools:context=".PreferenceActivity" />
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRowPowerOnCommand"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|left" >
+
+        <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="@string/label_edit_power_on_command"
+         tools:context=".PreferenceActivity" />
+
+        <EditText
+         android:id="@+id/editTextPowerOnAddress"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text=""
+         android:hint=""
+         android:lines="1"
+         android:inputType="number"/>
+
+        <EditText
+         android:id="@+id/editTextPowerOnData"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text=""
+         android:hint=""
+         android:lines="1"
+         android:inputType="number"/>
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRowPowerOffCommand"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|left" >
+
+        <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="@string/label_edit_power_off_command"
+         tools:context=".PreferenceActivity" />
+
+        <EditText
+         android:id="@+id/editTextPowerOffAddress"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text=""
+         android:hint=""
+         android:lines="1"
+         android:inputType="number"/>
+
+        <EditText
+         android:id="@+id/editTextPowerOffData"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:text=""
+         android:hint=""
+         android:lines="1"
+         android:inputType="number"/>
+
+    </TableRow>
+
+</TableLayout>
