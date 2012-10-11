@@ -12,8 +12,19 @@
         android:layout_height="wrap_content"
         android:text="@string/label_button_power" />
 
+    <Button
+        android:id="@+id/buttonPWM"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_button_pwm" />
+
+    <Button
+        android:id="@+id/buttonMode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_button_mode" />
+
     <TableRow
-        android:id="@+id/tableRowRed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical|left" >
@@ -32,16 +43,16 @@
             android:progressDrawable="@drawable/seekbar_red"
             android:max="255"/>
 
+        <!--
         <Button
             android:id="@+id/buttonRed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_button_red" />
-
+        -->
     </TableRow>
 
     <TableRow
-        android:id="@+id/tableRowGreen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical|left" >
@@ -60,16 +71,16 @@
             android:progressDrawable="@drawable/seekbar_green"
             android:max="255"/>
 
+        <!--
         <Button
             android:id="@+id/buttonGreen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_button_green" />
-
+         -->
     </TableRow>
 
     <TableRow
-        android:id="@+id/tableRowBlue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical|left" >
@@ -88,28 +99,29 @@
             android:progressDrawable="@drawable/seekbar_blue"
             android:max="255"/>
 
+        <!--
         <Button
             android:id="@+id/buttonBlue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_button_blue" />
+         -->
     </TableRow>
 
     <TableRow
-        android:id="@+id/tableRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical|left" >
 
         <TextView
-            android:id="@+id/textViewAtt"
+            android:id="@+id/textViewGamma"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/label_text_att"
+            android:text="@string/label_text_gamma"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <SeekBar
-            android:id="@+id/seekBarAtt"
+            android:id="@+id/seekBarGamma"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:progressDrawable="@drawable/seekbar_white"
@@ -124,15 +136,19 @@
             android:max="255"/>
     -->
 
+    <!--
     <Spinner
         android:id="@+id/spinner1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+    -->
 
+    <!--
     <Button
         android:id="@+id/buttonReset"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/label_button_reset" />
+    -->
 </TableLayout>
 

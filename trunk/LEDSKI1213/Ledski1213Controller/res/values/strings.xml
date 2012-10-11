@@ -5,16 +5,18 @@
     <string name="title_activity_controller">ControllerActivity</string>
     <string name="title_activity_preference">PreferenceActivity</string>
 
-    <string name="label_button_power">点灯/消灯</string>
-    <string name="label_button_red">R挙動</string>
+    <string name="label_button_power">ドライバ電源ON/OFF</string>
+    <string name="label_button_pwm">PWM動作開始/停止</string>
+    <string name="label_button_mode">動作モード</string>
+    <!-- <string name="label_button_red">R挙動</string>
     <string name="label_button_green">G挙動</string>
     <string name="label_button_blue">B挙動</string>
-    <string name="label_button_reset">SWリセット</string>
+    <string name="label_button_reset">SWリセット</string> -->
 
     <string name="label_text_red">R</string>
     <string name="label_text_green">G</string>
     <string name="label_text_blue">B</string>
-    <string name="label_text_att">ATT</string>
+    <string name="label_text_gamma">γ</string>
 
 
 
