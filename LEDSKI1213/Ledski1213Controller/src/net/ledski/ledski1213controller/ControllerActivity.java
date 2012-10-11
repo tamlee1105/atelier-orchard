@@ -24,23 +24,30 @@ public class ControllerActivity extends Activity {
 
     private static final String TAG = "Ledski1213Controller";
 
+    //
+    private int     mStateCtrlMode  = 0x0;
+    private boolean mStateCtrlPwm   = false;
+    private boolean mStateCtrlPower = false;
+
     // UIパーツ群
     private Button mPowerButton;
+    private Button mPwmButton;
+    private Button mModeButton;
     private Button mBehaviorRedButton;
     private Button mBehaviorGreenButton;
     private Button mBehaviorBlueButton;
-    private Button mResetButton;
+    //private Button mResetButton;
     private SeekBar mRedSeekBar;
     private SeekBar mGreenSeekBar;
     private SeekBar mBlueSeekBar;
-    private SeekBar mAttSeekBar;
+    //private SeekBar mAttSeekBar;
+    private SeekBar mGammaSeekBar;
 
     private String[] mBehaviorButtonLavels = new String[]{"X連動","Y連動","Z連動","手動"};
 
     // Bluetooth
     private String               mConnectedDeviceName      = null; /**< Name of the connected device */
     //private ArrayAdapter<String> mConversationArrayAdapter;        /**< Array adapter for the conversation thread */
-    private StringBuffer         mOutStringBuffer;                 /**< String buffer for outgoing messages TODO: たぶんいらない */
     private BluetoothAdapter     mBluetoothAdapter         = null; /**< Local Bluetooth adapter */
     private BluetoothChatService mChatService = null;              /**< Member object for the chat services */
 
@@ -65,34 +72,48 @@ public class ControllerActivity extends Activity {
         setContentView(R.layout.activity_controller);
 
         // UIパーツ取得
-        mPowerButton         = (Button) this.findViewById(R.id.buttonPower);
-        mBehaviorRedButton   = (Button)this.findViewById(R.id.buttonRed);
-        mBehaviorGreenButton = (Button) this.findViewById(R.id.buttonGreen);
-        mBehaviorBlueButton  = (Button) this.findViewById(R.id.buttonBlue);
-        mResetButton         = (Button) this.findViewById(R.id.buttonReset);
+        mPowerButton           = (Button) this.findViewById(R.id.buttonPower);
+        mPwmButton             = (Button) this.findViewById(R.id.buttonPWM);
+        mModeButton            = (Button) this.findViewById(R.id.buttonMode);
+        //mBehaviorRedButton   = (Button)this.findViewById(R.id.buttonRed);
+        //mBehaviorGreenButton = (Button) this.findViewById(R.id.buttonGreen);
+        //mBehaviorBlueButton  = (Button) this.findViewById(R.id.buttonBlue);
+        //mResetButton         = (Button) this.findViewById(R.id.buttonReset);
         mRedSeekBar          = (SeekBar) this.findViewById(R.id.seekBarRed);
         mGreenSeekBar        = (SeekBar) this.findViewById(R.id.seekBarGreen);
         mBlueSeekBar         = (SeekBar) this.findViewById(R.id.seekBarBlue);
-        mAttSeekBar          = (SeekBar) this.findViewById(R.id.seekBarAtt);
+        //mAttSeekBar          = (SeekBar) this.findViewById(R.id.seekBarAtt);
+        mGammaSeekBar          = (SeekBar) this.findViewById(R.id.seekBarGamma);
 
         // UIパーツリスナ登録
-        mPowerButton.setOnClickListener(mOnPowerButtonClick);
-        mBehaviorRedButton.setOnClickListener(mOnBehaviorButtonClick);
-        mBehaviorGreenButton.setOnClickListener(mOnBehaviorButtonClick);
-        mBehaviorBlueButton.setOnClickListener(mOnBehaviorButtonClick);
-        mResetButton.setOnClickListener(mOnResetButtonClick);
+        mPowerButton.setOnClickListener(mOnCtrlButtonClick);
+        mPwmButton.setOnClickListener(mOnCtrlButtonClick);
+        mModeButton.setOnClickListener(mOnCtrlButtonClick);
+        //mBehaviorRedButton.setOnClickListener(mOnBehaviorButtonClick);
+        //mBehaviorGreenButton.setOnClickListener(mOnBehaviorButtonClick);
+        //mBehaviorBlueButton.setOnClickListener(mOnBehaviorButtonClick);
+        //mResetButton.setOnClickListener(mOnResetButtonClick);
         mRedSeekBar.setOnSeekBarChangeListener(mOnRGBSeekBarChange);
         mGreenSeekBar.setOnSeekBarChangeListener(mOnRGBSeekBarChange);
         mBlueSeekBar.setOnSeekBarChangeListener(mOnRGBSeekBarChange);
-        mAttSeekBar.setOnSeekBarChangeListener(mOnATTSeekBarChange);
+        mGammaSeekBar.setOnSeekBarChangeListener(mOnGammaSeekBarChange);
+        //mAttSeekBar.setOnSeekBarChangeListener(mOnATTSeekBarChange);
 
         // SharedPreferenceの読み込み
         mShared = this.getSharedPreferences("shared", Context.MODE_PRIVATE);
 
         // UI部品初期化
-        changeRGBBehaivor(mRedSeekBar, mBehaviorRedButton, mShared.getInt("behavior_red", 0));
-        changeRGBBehaivor(mGreenSeekBar, mBehaviorGreenButton, mShared.getInt("behavior_green", 1));
-        changeRGBBehaivor(mBlueSeekBar, mBehaviorBlueButton, mShared.getInt("behavior_blue", 2));
+        //changeRGBBehaivor(mRedSeekBar, mBehaviorRedButton, mShared.getInt("behavior_red", 0));
+        //changeRGBBehaivor(mGreenSeekBar, mBehaviorGreenButton, mShared.getInt("behavior_green", 1));
+        //changeRGBBehaivor(mBlueSeekBar, mBehaviorBlueButton, mShared.getInt("behavior_blue", 2));
+        mRedSeekBar.setProgress(255);
+        mRedSeekBar.setMax(255);
+        mGreenSeekBar.setProgress(255);
+        mGreenSeekBar.setMax(255);
+        mBlueSeekBar.setProgress(255);
+        mBlueSeekBar.setMax(255);
+        mGammaSeekBar.setProgress(127);
+        mGammaSeekBar.setMax(255);
 
         // Get local Bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -146,9 +167,6 @@ public class ControllerActivity extends Activity {
 
         // Initialize the BluetoothChatService to perform bluetooth connections
         mChatService = new BluetoothChatService(this, mHandler);
-
-        // Initialize the buffer for outgoing messages
-        mOutStringBuffer = new StringBuffer("");
     }
 
     // The Handler that gets information back from the BluetoothChatService
@@ -226,8 +244,9 @@ public class ControllerActivity extends Activity {
         Intent intent;
         switch (item.getItemId()) {
         case R.id.menu_settings:
-            intent = new Intent(this, PreferenceActivity.class);
-            startActivity(intent);
+            // TODO: コマンド設定Activityへの遷移
+            //intent = new Intent(this, PreferenceActivity.class);
+            //startActivity(intent);
             return true;
         case R.id.menu_scan:
             // Launch the DeviceListActivity to see devices and do scan
@@ -251,18 +270,32 @@ public class ControllerActivity extends Activity {
         }
     }
 
-    /** [点灯/消灯]ボタンを押したとき */
-    private View.OnClickListener mOnPowerButtonClick = new View.OnClickListener() {
-
+    /** コントロール系ボタンを押したとき */
+    private View.OnClickListener mOnCtrlButtonClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            switch(view.getId()){
+            case R.id.buttonMode:
+                mStateCtrlMode++;
+                if(mStateCtrlMode >= 3){
+                    mStateCtrlMode = 0;
+                }
+                break;
+            case R.id.buttonPWM:
+                mStateCtrlPwm = !mStateCtrlPwm;
+                break;
+            case R.id.buttonPower:
+                mStateCtrlPower = !mStateCtrlPower;
+                break;
+            }
             //sendMessage("点灯/消灯ボタンが押された\r\n");
             sendCommand(new byte[]{(byte) mShared.getInt("power_on_address", getResources().getInteger(R.integer.default_power_on_address)), (byte) mShared.getInt("power_on_data", getResources().getInteger(R.integer.default_power_on_data))});
+            // FIXME 上記コマンド
         }
     };
 
     /** RGB挙動変更ボタンを押したとき */
-    private View.OnClickListener mOnBehaviorButtonClick = new View.OnClickListener() {
+    /*private View.OnClickListener mOnBehaviorButtonClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             String key = "";
@@ -290,10 +323,10 @@ public class ControllerActivity extends Activity {
             mShared.edit().putInt(key, behavior).commit();
             changeRGBBehaivor(seekBar, (Button)view, behavior);
         }
-    };
+    };*/
 
     /** RGB挙動変更ボタンとシークバーの状態を変更 */
-    private void changeRGBBehaivor(SeekBar seekBar, Button button, int behavior){
+    /*private void changeRGBBehaivor(SeekBar seekBar, Button button, int behavior){
         button.setText(mBehaviorButtonLavels[behavior]);
         if(behavior == 3){
             seekBar.setEnabled(true);
@@ -302,86 +335,62 @@ public class ControllerActivity extends Activity {
             seekBar.setEnabled(false);
             seekBar.setClickable(false);
         }
-    }
+    }*/
 
     /** [SWリセット]ボタンを押したとき */
-    private View.OnClickListener mOnResetButtonClick = new View.OnClickListener() {
+    /*private View.OnClickListener mOnResetButtonClick = new View.OnClickListener() {
 
         @Override
         public void onClick(View view) {
             // TODO 自動生成されたメソッド・スタブ
 
         }
-    };
+    };*/
 
     /** RGBシークバーが操作されたとき */
     private SeekBar.OnSeekBarChangeListener mOnRGBSeekBarChange = new SeekBar.OnSeekBarChangeListener() {
-
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            // TODO 自動生成されたメソッド・スタブ
-
         }
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
-            // TODO 自動生成されたメソッド・スタブ
-
         }
 
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress,
                 boolean fromUser) {
-            // TODO 自動生成されたメソッド・スタブ
-
+            switch(seekBar.getId()){
+            case R.id.seekBarRed:
+                break;
+            case R.id.seekBarGreen:
+                break;
+            case R.id.seekBarBlue:
+                break;
+            default:
+                return;
+            }
+            // TODO コマンド送信
         }
     };
 
-    /** ATTシークバーが操作されたとき */
-    private SeekBar.OnSeekBarChangeListener mOnATTSeekBarChange = new SeekBar.OnSeekBarChangeListener() {
+    /** Gammaシークバーが操作されたとき */
+    private SeekBar.OnSeekBarChangeListener mOnGammaSeekBarChange = new SeekBar.OnSeekBarChangeListener() {
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            // TODO 自動生成されたメソッド・スタブ
-
         }
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
-            // TODO 自動生成されたメソッド・スタブ
-
         }
 
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress,
                 boolean fromUser) {
-            // TODO 自動生成されたメソッド・スタブ
-
+            // TODO コマンド送信
         }
     };
-
-    /**
-     * Sends a message.
-     * @param message  A string of text to send.
-     */
-    private void sendMessage(String message) {
-        // Check that we're actually connected before trying anything
-        if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED) {
-            Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Check that there's actually something to send
-        if (message.length() > 0) {
-            // Get the message bytes and tell the BluetoothChatService to write
-            byte[] send = message.getBytes();
-            mChatService.write(send);
-
-            // Reset out string buffer to zero and clear the edit text field
-            mOutStringBuffer.setLength(0);
-            //mOutEditText.setText(mOutStringBuffer);
-        }
-    }
 
     private void sendCommand(byte[] command){
         // Check that we're actually connected before trying anything
@@ -396,7 +405,7 @@ public class ControllerActivity extends Activity {
             mChatService.write(command);
 
             // Reset out string buffer to zero and clear the edit text field
-            mOutStringBuffer.setLength(0);
+            //mOutStringBuffer.setLength(0);
             //mOutEditText.setText(mOutStringBuffer);
         }
 
@@ -440,5 +449,20 @@ public class ControllerActivity extends Activity {
         case KeyEvent.KEYCODE_SEARCH:
         }
         return false;
-      }
+    }
+
+    /** 初期コマンド送信（connect時に実行、UIの状態を全部送信して同期する） */
+    private void sendInitialCommand(){
+        // UI状態取得
+        // TODO
+
+        // ここでコマンド生成でもいいかも
+
+        // コマンド送信
+        sendCommand(new byte[]{}); // Ctrl系
+        sendCommand(new byte[]{}); // Red
+        sendCommand(new byte[]{}); // Green
+        sendCommand(new byte[]{}); // Blue
+        sendCommand(new byte[]{}); // γ
+    }
 }
