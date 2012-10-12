@@ -289,8 +289,14 @@ public class ControllerActivity extends Activity {
                 break;
             }
             //sendMessage("点灯/消灯ボタンが押された\r\n");
-            sendCommand(new byte[]{(byte) mShared.getInt("power_on_address", getResources().getInteger(R.integer.default_power_on_address)), (byte) mShared.getInt("power_on_data", getResources().getInteger(R.integer.default_power_on_data))});
+            //sendCommand(new byte[]{, (byte) mShared.getInt("power_on_data", getResources().getInteger(R.integer.default_power_on_data))});
             // FIXME 上記コマンド
+            byte[] command = new byte[]{0x0, 0x0};
+            command[1] |= (byte) getResources().getInteger(R.integer.default_ctrl_address);
+            command[0] |= (mStateCtrlMode == 0 ? 0: mStateCtrlMode == 1 ? 1 : 2) << 2; // 0: manual, 1: demo, 2: g
+            command[0] |= (mStateCtrlPwm ? 1 : 0) << 1;
+            command[0] |= (mStateCtrlPower ? 1 : 0) << 0;
+            sendCommand(command);
         }
     };
 
@@ -360,17 +366,24 @@ public class ControllerActivity extends Activity {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress,
                 boolean fromUser) {
+            byte address;
             switch(seekBar.getId()){
             case R.id.seekBarRed:
+                address = (byte) getResources().getInteger(R.integer.default_red_address);
                 break;
             case R.id.seekBarGreen:
+                address = (byte) getResources().getInteger(R.integer.default_green_address);
                 break;
             case R.id.seekBarBlue:
+                address = (byte) getResources().getInteger(R.integer.default_blue_address);
                 break;
             default:
                 return;
             }
-            // TODO コマンド送信
+            byte[] command = new byte[]{0x0, 0x0};
+            command[1] |= address;
+            command[0] |= (byte) progress;
+            sendCommand(command);
         }
     };
 
@@ -388,7 +401,10 @@ public class ControllerActivity extends Activity {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress,
                 boolean fromUser) {
-            // TODO コマンド送信
+            byte[] command = new byte[]{0x0, 0x0};
+            command[1] |= (byte) getResources().getInteger(R.integer.default_gamma_address);
+            command[0] |= (byte) progress;
+            sendCommand(command);
         }
     };
 
@@ -403,10 +419,6 @@ public class ControllerActivity extends Activity {
         if (command.length > 1) {
             // Get the message bytes and tell the BluetoothChatService to write
             mChatService.write(command);
-
-            // Reset out string buffer to zero and clear the edit text field
-            //mOutStringBuffer.setLength(0);
-            //mOutEditText.setText(mOutStringBuffer);
         }
 
     }
@@ -451,18 +463,33 @@ public class ControllerActivity extends Activity {
         return false;
     }
 
-    /** 初期コマンド送信（connect時に実行、UIの状態を全部送信して同期する） */
+    /** 初期コマンド送信（connect時に実行、UIの状態を全部送信して同期する）TODO: どこで呼ぶか */
     private void sendInitialCommand(){
-        // UI状態取得
-        // TODO
+        byte[] command = new byte[]{0x0, 0x0};
+        command[1] |= (byte) getResources().getInteger(R.integer.default_red_address);
+        command[0] |= (byte) mRedSeekBar.getProgress();
+        sendCommand(command);
 
-        // ここでコマンド生成でもいいかも
+        command = new byte[]{0x0, 0x0};
+        command[1] |= (byte) getResources().getInteger(R.integer.default_green_address);
+        command[0] |= (byte) mGreenSeekBar.getProgress();
+        sendCommand(command);
 
-        // コマンド送信
-        sendCommand(new byte[]{}); // Ctrl系
-        sendCommand(new byte[]{}); // Red
-        sendCommand(new byte[]{}); // Green
-        sendCommand(new byte[]{}); // Blue
-        sendCommand(new byte[]{}); // γ
+        command = new byte[]{0x0, 0x0};
+        command[1] |= (byte) getResources().getInteger(R.integer.default_blue_address);
+        command[0] |= (byte) mBlueSeekBar.getProgress();
+        sendCommand(command);
+
+        command = new byte[]{0x0, 0x0};
+        command[1] |= (byte) getResources().getInteger(R.integer.default_gamma_address);
+        command[0] |= (byte) mGammaSeekBar.getProgress();
+        sendCommand(command);
+
+        command = new byte[]{0x0, 0x0};
+        command[1] |= (byte) getResources().getInteger(R.integer.default_ctrl_address);
+        command[0] |= (mStateCtrlMode == 0 ? 0: mStateCtrlMode == 1 ? 1 : 2) << 2; // 0: manual, 1: demo, 2: g
+        command[0] |= (mStateCtrlPwm ? 1 : 0) << 1;
+        command[0] |= (mStateCtrlPower ? 1 : 0) << 0;
+        sendCommand(command);
     }
 }
