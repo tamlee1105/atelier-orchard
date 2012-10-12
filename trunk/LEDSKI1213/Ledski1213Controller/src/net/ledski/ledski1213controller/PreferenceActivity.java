@@ -38,7 +38,7 @@ public class PreferenceActivity extends Activity {
 
         // 点灯コマンド（アドレス）
         mEditTextPowerOnAddress = (EditText) findViewById(R.id.editTextPowerOnAddress);
-        mEditTextPowerOnAddress.setText(String.format("%02X", mShared.getInt("power_on_address", getResources().getInteger(R.integer.default_power_on_address))));
+        mEditTextPowerOnAddress.setText(String.format("%02X", mShared.getInt("power_on_address", getResources().getInteger(R.integer.default_ctrl_address))));
         mEditTextPowerOnAddress.addTextChangedListener(new TextWatcher(){
             @Override
             public void afterTextChanged(Editable s) {
@@ -56,7 +56,7 @@ public class PreferenceActivity extends Activity {
 
         // 点灯コマンド（データ）
         mEditTextPowerOnData = (EditText) findViewById(R.id.editTextPowerOnData);
-        mEditTextPowerOnData.setText(String.format("%02X", mShared.getInt("power_on_data", getResources().getInteger(R.integer.default_power_on_data))));
+        mEditTextPowerOnData.setText(String.format("%02X", mShared.getInt("power_on_data", getResources().getInteger(R.integer.default_ctrl_address))));
         mEditTextPowerOnData.addTextChangedListener(new TextWatcher(){
             @Override
             public void afterTextChanged(Editable s) {

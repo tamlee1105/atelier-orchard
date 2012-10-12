@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <integer name="default_power_on_address">0</integer>
-    <integer name="default_power_on_data">1</integer>
+    <integer name="default_ctrl_address">0</integer>
+    <integer name="default_red_address">16</integer>
+    <integer name="default_green_address">17</integer>
+    <integer name="default_blue_address">18</integer>
+    <integer name="default_gamma_address">32</integer>
 </resources>
