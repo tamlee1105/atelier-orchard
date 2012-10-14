@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <integer name="default_ctrl_address">0</integer>
-    <integer name="default_red_address">16</integer>
-    <integer name="default_green_address">17</integer>
-    <integer name="default_blue_address">18</integer>
-    <integer name="default_gamma_address">32</integer>
+    <integer name="default_ctrl_address">0x00</integer>
+    <integer name="default_red_mode_address">0x01</integer>
+    <integer name="default_green_mode_address">0x02</integer>
+    <integer name="default_blue_mode_address">0x03</integer>
+    <integer name="default_red_value_address">0x10</integer>
+    <integer name="default_green_value_address">0x11</integer>
+    <integer name="default_blue_value_address">0x12</integer>
+    <integer name="default_gamma_address">0x20</integer>
 </resources>

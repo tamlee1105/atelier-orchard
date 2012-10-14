@@ -41,7 +41,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:progressDrawable="@drawable/seekbar_red"
-            android:max="255"/>
+            android:max="0xFF"
+            android:layout_margin="8dp"/>
 
         <!--
         <Button
@@ -69,7 +70,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:progressDrawable="@drawable/seekbar_green"
-            android:max="255"/>
+            android:max="0xFF"
+            android:layout_margin="8dp"/>
 
         <!--
         <Button
@@ -97,7 +99,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:progressDrawable="@drawable/seekbar_blue"
-            android:max="255"/>
+            android:max="0xFF"
+            android:layout_margin="8dp"/>
 
         <!--
         <Button
@@ -125,7 +128,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:progressDrawable="@drawable/seekbar_white"
-            android:max="255"/>
+            android:max="0xFF"
+            android:layout_margin="8dp"/>
     </TableRow>
 
     <!--
@@ -150,5 +154,13 @@
         android:layout_height="wrap_content"
         android:text="@string/label_button_reset" />
     -->
+
+    <TextView
+        android:id="@+id/textViewEchoMonitor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_text_echo_monitor"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:background="#888888"/>
 </TableLayout>
 
