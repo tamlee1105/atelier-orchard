@@ -26,17 +26,19 @@ public class ControllerActivity extends Activity {
     private static final String TAG = "Ledski1213Controller";
 
     //
-    private int     mStateCtrlMode  = 0x0;
+    private int     mStateCtrlModeRed  = 0x0;
+    private int     mStateCtrlModeGreen  = 0x0;
+    private int     mStateCtrlModeBlue  = 0x0;
     private boolean mStateCtrlPwm   = false;
     private boolean mStateCtrlPower = false;
 
     // UIパーツ群
     private Button mPowerButton;
     private Button mPwmButton;
-    private Button mModeButton;
-    /*private Button mBehaviorRedButton;
+    //private Button mModeButton;
+    private Button mBehaviorRedButton;
     private Button mBehaviorGreenButton;
-    private Button mBehaviorBlueButton;*/
+    private Button mBehaviorBlueButton;
     //private Button mResetButton;
     private SeekBar mRedSeekBar;
     private SeekBar mGreenSeekBar;
@@ -44,6 +46,7 @@ public class ControllerActivity extends Activity {
     //private SeekBar mAttSeekBar;
     private SeekBar mGammaSeekBar;
     private TextView mEchoMonitorText;
+    private TextView mBluetoothStatusText;
 
     //private String[] mBehaviorButtonLavels = new String[]{"X連動","Y連動","Z連動","手動"};
 
@@ -76,10 +79,10 @@ public class ControllerActivity extends Activity {
         // UIパーツ取得
         mPowerButton           = (Button) this.findViewById(R.id.buttonPower);
         mPwmButton             = (Button) this.findViewById(R.id.buttonPWM);
-        mModeButton            = (Button) this.findViewById(R.id.buttonMode);
-        //mBehaviorRedButton   = (Button)this.findViewById(R.id.buttonRed);
-        //mBehaviorGreenButton = (Button) this.findViewById(R.id.buttonGreen);
-        //mBehaviorBlueButton  = (Button) this.findViewById(R.id.buttonBlue);
+        //mModeButton            = (Button) this.findViewById(R.id.buttonMode);
+        mBehaviorRedButton   = (Button)this.findViewById(R.id.buttonRed);
+        mBehaviorGreenButton = (Button) this.findViewById(R.id.buttonGreen);
+        mBehaviorBlueButton  = (Button) this.findViewById(R.id.buttonBlue);
         //mResetButton         = (Button) this.findViewById(R.id.buttonReset);
         mRedSeekBar          = (SeekBar) this.findViewById(R.id.seekBarRed);
         mGreenSeekBar        = (SeekBar) this.findViewById(R.id.seekBarGreen);
@@ -87,14 +90,15 @@ public class ControllerActivity extends Activity {
         //mAttSeekBar          = (SeekBar) this.findViewById(R.id.seekBarAtt);
         mGammaSeekBar          = (SeekBar) this.findViewById(R.id.seekBarGamma);
         mEchoMonitorText       = (TextView) this.findViewById(R.id.textViewEchoMonitor);
+        mBluetoothStatusText                 = (TextView) this.findViewById(R.id.textViewBluetoothStatus);
 
         // UIパーツリスナ登録
         mPowerButton.setOnClickListener(mOnCtrlButtonClick);
         mPwmButton.setOnClickListener(mOnCtrlButtonClick);
-        mModeButton.setOnClickListener(mOnBehaviorButtonClick);
-        //mBehaviorRedButton.setOnClickListener(mOnBehaviorButtonClick);
-        //mBehaviorGreenButton.setOnClickListener(mOnBehaviorButtonClick);
-        //mBehaviorBlueButton.setOnClickListener(mOnBehaviorButtonClick);
+        //mModeButton.setOnClickListener(mOnBehaviorButtonClick);
+        mBehaviorRedButton.setOnClickListener(mOnBehaviorButtonClick);
+        mBehaviorGreenButton.setOnClickListener(mOnBehaviorButtonClick);
+        mBehaviorBlueButton.setOnClickListener(mOnBehaviorButtonClick);
         //mResetButton.setOnClickListener(mOnResetButtonClick);
         mRedSeekBar.setOnSeekBarChangeListener(mOnRGBSeekBarChange);
         mGreenSeekBar.setOnSeekBarChangeListener(mOnRGBSeekBarChange);
@@ -117,7 +121,9 @@ public class ControllerActivity extends Activity {
         mBlueSeekBar.setMax(255);
         mGammaSeekBar.setProgress(127);
         mGammaSeekBar.setMax(255);
-        mModeButton.setText(getString(R.string.label_button_mode) + ((mStateCtrlMode == 0 ? " [マニュアル]": mStateCtrlMode == 1 ? " [デモ]" : " [加速度]")));
+        mBehaviorRedButton.setText((mStateCtrlModeRed == 0x00 ? " [手動]": mStateCtrlModeRed == 0x01 ? " [デモ]" : " [加速度]"));
+        mBehaviorGreenButton.setText((mStateCtrlModeGreen == 0x00 ? " [手動]": mStateCtrlModeGreen == 0x01 ? " [デモ]" : " [加速度]"));
+        mBehaviorBlueButton.setText((mStateCtrlModeBlue == 0x00 ? " [手動]": mStateCtrlModeBlue == 0x01 ? " [デモ]" : " [加速度]"));
         mPwmButton.setText(getString(R.string.label_button_pwm) + (mStateCtrlPwm ? " [動作中]" : " [停止中]"));
         mPowerButton.setText(getString(R.string.label_button_power) + (mStateCtrlPower ? " [ON]" : " [OFF]"));
 
@@ -158,17 +164,17 @@ public class ControllerActivity extends Activity {
                 //if(D) Log.i(TAG, "MESSAGE_STATE_CHANGE: " + msg.arg1);
                 switch (msg.arg1) {
                 case BluetoothChatService.STATE_CONNECTED:
-                    //mTitle.setText(R.string.title_connected_to);
-                    //mTitle.append(mConnectedDeviceName);
+                    mBluetoothStatusText.setText(R.string.title_connected_to);
+                    mBluetoothStatusText.append(mConnectedDeviceName);
                     //mConversationArrayAdapter.clear();
                     sendInitialCommand();
                     break;
                 case BluetoothChatService.STATE_CONNECTING:
-                    //mTitle.setText(R.string.title_connecting);
+                    mBluetoothStatusText.setText(R.string.title_connecting);
                     break;
                 case BluetoothChatService.STATE_LISTEN:
                 case BluetoothChatService.STATE_NONE:
-                    //mTitle.setText(R.string.title_not_connected);
+                    mBluetoothStatusText.setText(R.string.title_not_connected);
                     break;
                 }
                 break;
@@ -332,7 +338,7 @@ public class ControllerActivity extends Activity {
             //sendMessage("点灯/消灯ボタンが押された\r\n");
             byte[] command = new byte[]{0x0, 0x0};
             command[0] |= (byte) getResources().getInteger(R.integer.default_ctrl_address);
-            command[1] |= (mStateCtrlMode == 0 ? 0: mStateCtrlMode == 1 ? 1 : 2) << 2; // 0: manual, 1: demo, 2: g
+            //command[1] |= (mStateCtrlMode == 0 ? 0: mStateCtrlMode == 1 ? 1 : 2) << 2; // 0: manual, 1: demo, 2: g
             command[1] |= (mStateCtrlPwm ? 1 : 0) << 1;
             command[1] |= (mStateCtrlPower ? 1 : 0) << 0;
             sendCommand(command);
@@ -343,46 +349,47 @@ public class ControllerActivity extends Activity {
     private View.OnClickListener mOnBehaviorButtonClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            /*String key = "";
+            int stateCtrlMode = 0;
+            byte address = 0x00;
             SeekBar seekBar = null;
             switch(view.getId()){
             case R.id.buttonRed:
-                key = "behavior_red";
+                mStateCtrlModeRed++;
+                if(mStateCtrlModeRed >= 3){
+                    mStateCtrlModeRed = 0;
+                }
+                stateCtrlMode = mStateCtrlModeRed;
                 seekBar = mRedSeekBar;
+                address = (byte) getResources().getInteger(R.integer.default_red_mode_address);
                 break;
             case R.id.buttonGreen:
-                key = "behavior_green";
+                mStateCtrlModeGreen++;
+                if(mStateCtrlModeGreen >= 3){
+                    mStateCtrlModeGreen = 0;
+                }
+                stateCtrlMode = mStateCtrlModeGreen;
                 seekBar = mGreenSeekBar;
+                address = (byte) getResources().getInteger(R.integer.default_green_mode_address);
                 break;
             case R.id.buttonBlue:
-                key = "behavior_blue";
+                mStateCtrlModeBlue++;
+                if(mStateCtrlModeBlue >= 3){
+                    mStateCtrlModeBlue = 0;
+                }
+                stateCtrlMode = mStateCtrlModeBlue;
                 seekBar = mBlueSeekBar;
+                address = (byte) getResources().getInteger(R.integer.default_blue_mode_address);
                 break;
             default:
                 return;
-            }*/
-            mStateCtrlMode++;
-            if(mStateCtrlMode >= 3){
-                mStateCtrlMode = 0;
             }
-            String buttonLabel = getString(R.string.label_button_mode) + ((mStateCtrlMode == 0 ? " [マニュアル]": mStateCtrlMode == 1 ? " [デモ]" : " [加速度]"));
+            String buttonLabel = (stateCtrlMode == 0 ? " [手動]": stateCtrlMode == 1 ? " [デモ]" : " [加速度]");
             ((Button)view).setText(buttonLabel);
 
             byte[] command = new byte[]{0x0, 0x0};
             command = new byte[]{0x0, 0x0};
-            command[0] |= (byte) getResources().getInteger(R.integer.default_red_mode_address);
-            command[1] |= (byte) (mStateCtrlMode == 0 ? 0x00: mStateCtrlMode == 1 ? 0x01 : 0x02);
-            sendCommand(command);
-
-            command = new byte[]{0x0, 0x0};
-            command[0] |= (byte) getResources().getInteger(R.integer.default_green_mode_address);
-            command[1] |= (byte) (mStateCtrlMode == 0 ? 0x00: mStateCtrlMode == 1 ? 0x01 : 0x02);
-            sendCommand(command);
-
-            command = new byte[]{0x0, 0x0};
-            command[0] |= (byte) getResources().getInteger(R.integer.default_blue_mode_address);
-            command[1] |= (byte) (mStateCtrlMode == 0 ? 0x00: mStateCtrlMode == 1 ? 0x01 : 0x02);
-            sendCommand(command);
+            command[0] |= address;
+            command[1] |= (byte) (stateCtrlMode == 0 ? 0x00: stateCtrlMode == 1 ? 0x01 : 0x02);
         }
     };
 
@@ -538,17 +545,17 @@ public class ControllerActivity extends Activity {
 
         command = new byte[]{0x0, 0x0};
         command[0] |= (byte) getResources().getInteger(R.integer.default_red_mode_address);
-        command[1] |= (byte) (mStateCtrlMode == 0 ? 0x00: mStateCtrlMode == 1 ? 0x01 : 0x02);
+        command[1] |= (byte) (mStateCtrlModeRed == 0 ? 0x00: mStateCtrlModeRed == 1 ? 0x01 : 0x02);
         sendCommand(command);
 
         command = new byte[]{0x0, 0x0};
         command[0] |= (byte) getResources().getInteger(R.integer.default_green_mode_address);
-        command[1] |= (byte) (mStateCtrlMode == 0 ? 0x00: mStateCtrlMode == 1 ? 0x01 : 0x02);
+        command[1] |= (byte) (mStateCtrlModeGreen == 0 ? 0x00: mStateCtrlModeGreen == 1 ? 0x01 : 0x02);
         sendCommand(command);
 
         command = new byte[]{0x0, 0x0};
         command[0] |= (byte) getResources().getInteger(R.integer.default_blue_mode_address);
-        command[1] |= (byte) (mStateCtrlMode == 0 ? 0x00: mStateCtrlMode == 1 ? 0x01 : 0x02);
+        command[1] |= (byte) (mStateCtrlModeBlue == 0 ? 0x00: mStateCtrlModeBlue == 1 ? 0x01 : 0x02);
         sendCommand(command);
 
         command = new byte[]{0x0, 0x0};
