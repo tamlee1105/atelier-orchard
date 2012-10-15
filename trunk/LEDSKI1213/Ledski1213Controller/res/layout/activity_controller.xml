@@ -6,17 +6,30 @@
     android:layout_alignParentTop="true"
     android:stretchColumns="1">
 
-    <Button
-        android:id="@+id/buttonPower"
+    <TextView
+        android:id="@+id/textViewBluetoothState"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/label_button_power" />
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <Button
-        android:id="@+id/buttonPWM"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/label_button_pwm" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonPower"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/label_button_power" />
+
+        <Button
+            android:id="@+id/buttonPWM"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/label_button_pwm" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/buttonMode"
@@ -44,13 +57,12 @@
             android:max="0xFF"
             android:layout_margin="8dp"/>
 
-        <!--
         <Button
             android:id="@+id/buttonRed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_button_red" />
-        -->
+
     </TableRow>
 
     <TableRow
@@ -73,13 +85,12 @@
             android:max="0xFF"
             android:layout_margin="8dp"/>
 
-        <!--
         <Button
             android:id="@+id/buttonGreen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_button_green" />
-         -->
+
     </TableRow>
 
     <TableRow
@@ -102,13 +113,12 @@
             android:max="0xFF"
             android:layout_margin="8dp"/>
 
-        <!--
         <Button
             android:id="@+id/buttonBlue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_button_blue" />
-         -->
+
     </TableRow>
 
     <TableRow
