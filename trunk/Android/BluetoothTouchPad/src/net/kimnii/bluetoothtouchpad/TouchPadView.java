@@ -59,6 +59,7 @@ public class TouchPadView extends SurfaceView {
                 long frameStartTime = System.currentTimeMillis();
                 long elapsedTime = frameStartTime - startTime;
                 Canvas canvas = mSurfaceHolder.lockCanvas();
+                // TODO canvas の null チェック（終了時に不具合）
                 //canvas.drawColor(Color.BLUE);
                 canvas.drawPath(mPath, mPaint);
                 //canvas.drawCircle(x, y, 50, mPaint);
