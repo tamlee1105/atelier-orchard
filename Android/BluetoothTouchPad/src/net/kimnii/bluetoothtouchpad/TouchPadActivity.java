@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -23,9 +21,11 @@ public class TouchPadActivity extends Activity {
         mTag = getString(R.string.app_name);
 
         mTouchPadView = new TouchPadView(this);
+        mTouchPadView.setOnTouchListener(mOnTouchListener);
 
         LinearLayout linearLayoutTouchPad = (LinearLayout)findViewById(R.id.linearLayoutTouchPad);
-        //linearLayoutTouchPad.addView(mTouchPadView, new LayoutParams());
+        linearLayoutTouchPad.addView(mTouchPadView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+
     }
 
     @Override
@@ -47,7 +47,7 @@ public class TouchPadActivity extends Activity {
             }
             int x = (int)event.getX();
             int y = (int)event.getY();
-            //Log.d(mTag, "onTouch() x: " + x + " y: " + y);
+            Log.d(mTag, "onTouch() x: " + x + " y: " + y);
             return true;
         }
     };
