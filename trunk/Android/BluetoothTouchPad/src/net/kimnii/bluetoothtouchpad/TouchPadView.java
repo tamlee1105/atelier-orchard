@@ -101,6 +101,13 @@ public class TouchPadView extends SurfaceView {
 
     private class Circle {
 
+        Circle(float x, float y, float r){
+
+        }
+
+        public boolean update(long time){
+            return false;
+        }
     }
 
 }
