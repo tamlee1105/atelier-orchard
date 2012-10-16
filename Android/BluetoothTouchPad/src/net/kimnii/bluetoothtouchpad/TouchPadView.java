@@ -9,6 +9,7 @@ import android.graphics.Path;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 public class TouchPadView extends SurfaceView {
 
@@ -16,6 +17,7 @@ public class TouchPadView extends SurfaceView {
     private SurfaceHolder mSurfaceHolder;
     private Thread mDrawingThread; /**< 描画処理スレッド */
     private long mFrameDuration = 1000 / 15;
+    private View.OnTouchListener mOnTouchListener;
 
     private Path mPath = new Path();
     private Paint mPaint = new Paint();
@@ -73,6 +75,11 @@ public class TouchPadView extends SurfaceView {
         }
     };
 
+    @Override
+    public void setOnTouchListener (View.OnTouchListener listener){
+        this.mOnTouchListener = listener;
+    }
+
     /** タッチ処理 */
     @Override
     public boolean onTouchEvent(MotionEvent event){
@@ -89,7 +96,7 @@ public class TouchPadView extends SurfaceView {
         case MotionEvent.ACTION_UP:
             break;
         }
-        return true;
+        return (this.mOnTouchListener == null ) ? true : this.mOnTouchListener.onTouch(this, event);
     }
 
     private class Circle {

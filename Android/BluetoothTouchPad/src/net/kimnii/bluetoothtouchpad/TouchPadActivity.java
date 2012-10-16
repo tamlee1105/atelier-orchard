@@ -2,7 +2,6 @@ package net.kimnii.bluetoothtouchpad;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,7 +20,7 @@ public class TouchPadActivity extends Activity {
         mTag = getString(R.string.app_name);
 
         mTouchPadView = new TouchPadView(this);
-        //mTouchPadView.setOnTouchListener(mOnTouchListener);
+        mTouchPadView.setOnTouchListener(mOnTouchListener);
 
         LinearLayout linearLayoutTouchPad = (LinearLayout)findViewById(R.id.linearLayoutTouchPad);
         linearLayoutTouchPad.addView(mTouchPadView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
@@ -37,17 +36,9 @@ public class TouchPadActivity extends Activity {
     private View.OnTouchListener mOnTouchListener = new View.OnTouchListener(){
         @Override
         public boolean onTouch(View view, MotionEvent event) {
-            switch(event.getAction()){
-            case MotionEvent.ACTION_DOWN:
-                break;
-            case MotionEvent.ACTION_MOVE:
-                break;
-            case MotionEvent.ACTION_UP:
-                break;
-            }
             int x = (int)event.getX();
             int y = (int)event.getY();
-            Log.d(mTag, "onTouch() x: " + x + " y: " + y);
+            //Log.d(mTag, "onTouch() x: " + x + " y: " + y);
             return true;
         }
     };
