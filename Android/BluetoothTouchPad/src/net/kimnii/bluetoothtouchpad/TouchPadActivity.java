@@ -21,7 +21,7 @@ public class TouchPadActivity extends Activity {
         mTag = getString(R.string.app_name);
 
         mTouchPadView = new TouchPadView(this);
-        mTouchPadView.setOnTouchListener(mOnTouchListener);
+        //mTouchPadView.setOnTouchListener(mOnTouchListener);
 
         LinearLayout linearLayoutTouchPad = (LinearLayout)findViewById(R.id.linearLayoutTouchPad);
         linearLayoutTouchPad.addView(mTouchPadView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
