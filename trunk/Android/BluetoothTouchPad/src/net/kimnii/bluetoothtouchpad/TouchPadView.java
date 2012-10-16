@@ -2,7 +2,7 @@ package net.kimnii.bluetoothtouchpad;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -10,9 +10,6 @@ public class TouchPadView extends SurfaceView {
 
     SurfaceHolder mSurfaceHolder;
     Thread mDrawingThread; /**< 描画処理スレッド */
-    // 描画オブジェクト Path等 定義
-
-    // onTouch系
 
     public TouchPadView(Context context) {
         super(context);
@@ -49,5 +46,21 @@ public class TouchPadView extends SurfaceView {
             mSurfaceHolder.unlockCanvasAndPost(canvas);
         }
     };
+
+    /** タッチ処理 */
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+        int x = (int)event.getX();
+        int y = (int)event.getY();
+        switch(event.getAction()){
+        case MotionEvent.ACTION_DOWN:
+            break;
+        case MotionEvent.ACTION_MOVE:
+            break;
+        case MotionEvent.ACTION_UP:
+            break;
+        }
+        return false;
+    }
 
 }
