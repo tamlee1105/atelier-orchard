@@ -1,11 +1,14 @@
 package net.kimnii.bluetoothtouchpad;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -21,6 +24,8 @@ public class TouchPadView extends SurfaceView {
 
     private Path mPath = new Path();
     private Paint mPaint = new Paint();
+    private int mBackgroundColor;
+    private ArrayList<Circle> mCircles = new ArrayList<Circle>();
 
     public TouchPadView(Context context) {
         super(context);
@@ -32,6 +37,7 @@ public class TouchPadView extends SurfaceView {
         mPaint.setColor(Color.WHITE);
         mPaint.setStrokeWidth(4);
         mPaint.setStyle(Style.STROKE);
+        mBackgroundColor = Color.BLACK;
     }
 
     private SurfaceHolder.Callback mSurfaceHolderCallback = new SurfaceHolder.Callback(){
@@ -60,8 +66,13 @@ public class TouchPadView extends SurfaceView {
                 long elapsedTime = frameStartTime - startTime;
                 Canvas canvas = mSurfaceHolder.lockCanvas();
                 // TODO canvas の null チェック（終了時に不具合）
-                //canvas.drawColor(Color.BLUE);
+                canvas.drawColor(mBackgroundColor); // 動作してない？
                 canvas.drawPath(mPath, mPaint);
+                for(Circle circle : mCircles){
+                    if(!circle.draw(canvas, elapsedTime)){
+                        ; // けす？
+                    }
+                }
                 //canvas.drawCircle(x, y, 50, mPaint);
                 mSurfaceHolder.unlockCanvasAndPost(canvas);
                 try {
@@ -97,18 +108,42 @@ public class TouchPadView extends SurfaceView {
         case MotionEvent.ACTION_UP:
             break;
         }
+        Paint paint = new Paint();
+        paint.setColor(Color.WHITE);
+        paint.setStrokeWidth(4);
+        paint.setStyle(Style.FILL);
+        mCircles.add(new Circle(x, y, 10f, paint));
+        mBackgroundColor = yuv2rgb(255f, (255f * x / this.getWidth() - 128f), (255f * y / this.getHeight() - 128f));
+        //Log.d(mTag, "onTouch() mBackgroundColor: " + String.format("0x%08X", mBackgroundColor));
         return (this.mOnTouchListener == null ) ? true : this.mOnTouchListener.onTouch(this, event);
     }
 
     private class Circle {
+        float x;
+        float y;
+        float r;
+        Paint paint;
 
-        Circle(float x, float y, float r){
-
+        Circle(float x, float y, float r, Paint paint){
+            this.x = x;
+            this.y = y;
+            this.r = r;
+            this.paint = paint;
         }
 
-        public boolean update(long time){
+        public boolean draw(Canvas canvas, long time){
+            if(--r > 0){
+                canvas.drawCircle(x, y, r, paint);
+            }
             return false;
         }
+    }
+
+    private int yuv2rgb(float y, float u, float v){
+        int r = (int) (y             + 1.402 + v);
+        int g = (int) (y - 0.344 * u - 0.714 * v);
+        int b = (int) (y + 1.772 * u);
+        return (r << 16) | (g << 8) | b;
     }
 
 }
