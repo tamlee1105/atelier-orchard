@@ -8,7 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
-import android.util.Log;
+import android.graphics.PorterDuff.Mode;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -65,16 +65,22 @@ public class TouchPadView extends SurfaceView {
                 long frameStartTime = System.currentTimeMillis();
                 long elapsedTime = frameStartTime - startTime;
                 Canvas canvas = mSurfaceHolder.lockCanvas();
-                // TODO canvas の null チェック（終了時に不具合）
-                canvas.drawColor(mBackgroundColor); // 動作してない？
-                canvas.drawPath(mPath, mPaint);
-                for(Circle circle : mCircles){
-                    if(!circle.draw(canvas, elapsedTime)){
-                        ; // けす？
+                if(canvas != null){
+                    canvas.drawColor(0, Mode.CLEAR);
+                    canvas.drawColor(mBackgroundColor);
+
+                    canvas.drawPath(mPath, mPaint);
+
+                    for(int i = 0; i < mCircles.size();){
+                        if(mCircles.get(i).draw(canvas, elapsedTime)){
+                            ++i;
+                        }else{
+                            mCircles.remove(i);
+                        }
                     }
+
+                    mSurfaceHolder.unlockCanvasAndPost(canvas);
                 }
-                //canvas.drawCircle(x, y, 50, mPaint);
-                mSurfaceHolder.unlockCanvasAndPost(canvas);
                 try {
                     long sleepTime = mFrameDuration - (System.currentTimeMillis() - frameStartTime);
                     if(sleepTime > 0){
@@ -110,11 +116,11 @@ public class TouchPadView extends SurfaceView {
         }
         Paint paint = new Paint();
         paint.setColor(Color.WHITE);
-        paint.setStrokeWidth(4);
         paint.setStyle(Style.FILL);
-        mCircles.add(new Circle(x, y, 10f, paint));
-        mBackgroundColor = yuv2rgb(255f, (255f * x / this.getWidth() - 128f), (255f * y / this.getHeight() - 128f));
-        //Log.d(mTag, "onTouch() mBackgroundColor: " + String.format("0x%08X", mBackgroundColor));
+        mCircles.add(new Circle(x, y, 20f, paint));
+
+        mBackgroundColor = yuv2rgb(255f, (255f * x / (float)this.getWidth() - 128f), (255f * y / (float)this.getHeight() - 128f));
+
         return (this.mOnTouchListener == null ) ? true : this.mOnTouchListener.onTouch(this, event);
     }
 
@@ -132,18 +138,20 @@ public class TouchPadView extends SurfaceView {
         }
 
         public boolean draw(Canvas canvas, long time){
-            if(--r > 0){
+            r -= 1f;
+            if(r > 0){
                 canvas.drawCircle(x, y, r, paint);
+                return true;
             }
             return false;
         }
     }
 
     private int yuv2rgb(float y, float u, float v){
-        int r = (int) (y             + 1.402 + v);
-        int g = (int) (y - 0.344 * u - 0.714 * v);
-        int b = (int) (y + 1.772 * u);
-        return (r << 16) | (g << 8) | b;
+        int r = Math.max(0, Math.min(255, (int) (y             + 1.402 * v)));
+        int g = Math.max(0, Math.min(255, (int) (y - 0.344 * u - 0.714 * v)));
+        int b = Math.max(0, Math.min(255, (int) (y + 1.772 * u)));
+        return 0xff000000 | (r << 16) | (g << 8) | b;
     }
 
 }
