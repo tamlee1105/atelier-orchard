@@ -21,11 +21,15 @@ public class TouchPadView extends SurfaceView {
     private Thread mDrawingThread; /**< 描画処理スレッド */
     private long mFrameDuration = 1000 / 15;
     private View.OnTouchListener mOnTouchListener;
+    private int mTouchEventCount;
+    private final int TOUCH_EVENT_INTERVAL = 2;
 
+    // 表示オブジェクト群
     private Path mPath = new Path();
     private Paint mPaint = new Paint();
-    private int mBackgroundColor;
+    private int mBackgroundColor = 0;
     private ArrayList<Circle> mCircles = new ArrayList<Circle>();
+    private Marker mMarker = null;
 
     public TouchPadView(Context context) {
         super(context);
@@ -69,14 +73,18 @@ public class TouchPadView extends SurfaceView {
                     canvas.drawColor(0, Mode.CLEAR);
                     canvas.drawColor(mBackgroundColor);
 
-                    canvas.drawPath(mPath, mPaint);
+                    //canvas.drawPath(mPath, mPaint);
 
-                    for(int i = 0; i < mCircles.size();){
+                    /*for(int i = 0; i < mCircles.size();){
                         if(mCircles.get(i).draw(canvas, elapsedTime)){
                             ++i;
                         }else{
                             mCircles.remove(i);
                         }
+                    }*/
+
+                    if(mMarker != null){
+                        mMarker.draw(canvas);
                     }
 
                     mSurfaceHolder.unlockCanvasAndPost(canvas);
@@ -106,18 +114,31 @@ public class TouchPadView extends SurfaceView {
         //Log.d(mTag, "onTouch() x: " + x + " y: " + y);
         switch(event.getAction()){
         case MotionEvent.ACTION_DOWN:
-            mPath.moveTo(x, y);
+            //mPath.moveTo(x, y);
+            {
+                Paint paint = new Paint();
+                paint.setColor(Color.WHITE);
+                paint.setStrokeWidth(4);
+                paint.setStyle(Style.STROKE);
+                mMarker = new Marker(paint, (int)x, (int)y);
+            }
             break;
         case MotionEvent.ACTION_MOVE:
-            mPath.lineTo(x, y);
+            //mPath.lineTo(x, y);
+            mMarker.update((int)x, (int)y);
             break;
         case MotionEvent.ACTION_UP:
+            mMarker = null;
             break;
         }
-        Paint paint = new Paint();
-        paint.setColor(Color.WHITE);
-        paint.setStyle(Style.FILL);
-        mCircles.add(new Circle(x, y, 20f, paint));
+
+        if(--mTouchEventCount <= 0){
+            Paint paint = new Paint();
+            paint.setColor(Color.WHITE);
+            paint.setStyle(Style.FILL);
+            mCircles.add(new Circle(x, y, 20f, paint));
+            mTouchEventCount = TOUCH_EVENT_INTERVAL;
+        }
 
         mBackgroundColor = yuv2rgb(255f, (255f * x / (float)this.getWidth() - 128f), (255f * y / (float)this.getHeight() - 128f));
 
@@ -152,6 +173,40 @@ public class TouchPadView extends SurfaceView {
         int g = Math.max(0, Math.min(255, (int) (y - 0.344 * u - 0.714 * v)));
         int b = Math.max(0, Math.min(255, (int) (y + 1.772 * u)));
         return 0xff000000 | (r << 16) | (g << 8) | b;
+    }
+
+    private class Marker {
+        int x;
+        int y;
+        Paint paint;
+        int tailDirection;
+
+        Marker(Paint paint, int x, int y){
+            this.x = x;
+            this.y = y;
+            this.paint = paint;
+            //this.tailDirection
+        }
+
+        public boolean update(int x, int y){
+            this.x = x;
+            this.y = y;
+            return true;
+        }
+
+        public boolean draw(Canvas canvas){
+            canvas.drawRect(x - 10, y - 10, x + 10, y + 10, paint);
+            Path path = new Path();
+            path.moveTo(x + 10, y + 10);
+            path.lineTo(x + 20, y + 20);
+            canvas.drawPath(path, paint);
+            path.reset();
+            path.moveTo(x + 20, y + 20);
+            path.lineTo(x + 50, y + 20);
+            canvas.drawPath(path, paint);
+            canvas.drawTextOnPath(String.format("%03d%03d", x, y), path, 0, 0, paint);
+            return true;
+        }
     }
 
 }
