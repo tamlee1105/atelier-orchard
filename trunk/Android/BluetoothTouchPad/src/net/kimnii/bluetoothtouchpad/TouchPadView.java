@@ -115,14 +115,7 @@ public class TouchPadView extends SurfaceView {
         switch(event.getAction()){
         case MotionEvent.ACTION_DOWN:
             //mPath.moveTo(x, y);
-            {
-                Paint paint = new Paint();
-                paint.setColor(Color.WHITE);
-                paint.setStrokeWidth(2);
-                paint.setStyle(Style.STROKE);
-                paint.setTextSize(25f);
-                mMarker = new Marker(paint, (int)x, (int)y, this.getWidth(), this.getHeight());
-            }
+            mMarker = new Marker((int)x, (int)y, this.getWidth(), this.getHeight());
             break;
         case MotionEvent.ACTION_MOVE:
             //mPath.lineTo(x, y);
@@ -182,52 +175,60 @@ public class TouchPadView extends SurfaceView {
         int rx, ry;
         int l;
         int lth, rth, uth, bth;
-        Paint paint;
-        int tailDirection;
+        Paint textPaint;
+        Paint markerPaint;
 
-        Marker(Paint paint, int x, int y, int w, int h){
+        Marker(int x, int y, int w, int h){
             this.rx = 20;
             this.ry = 20;
             this.l = this.rx * 7;
-            this.paint = paint;
             //this.tailDirection
-            this.lth = w / 10;
+            this.lth = w / 5;
             this.rth = w - this.lth;
-            this.uth = h / 10;
+            this.uth = h / 7;
             this.bth = h - this.uth;
             this.update(x, y);
+            this.markerPaint = new Paint();
+            this.markerPaint.setColor(Color.WHITE);
+            this.markerPaint.setStrokeWidth(2);
+            this.markerPaint.setStyle(Style.STROKE);
+            this.textPaint = new Paint();
+            this.textPaint.setColor(Color.WHITE);
+            this.textPaint.setStrokeWidth(2);
+            this.textPaint.setStyle(Style.FILL);
+            this.textPaint.setTextSize(25f);
         }
 
         public boolean update(int x, int y){
             this.x = x;
             this.y = y;
             if(x < this.lth){
-                if(rx > 0) rx = -rx;
-                if(l > 0) l = -l;
-            }else if(x > this.rth){
                 if(rx < 0) rx = -rx;
                 if(l < 0) l = -l;
+            }else if(x > this.rth){
+                if(rx > 0) rx = -rx;
+                if(l > 0) l = -l;
             }
             if(y < this.uth){
-                if(ry > 0) ry = -ry;
-            }else if(y > this.bth){
                 if(ry < 0) ry = -ry;
+            }else if(y > this.bth){
+                if(ry > 0) ry = -ry;
             }
             return true;
         }
 
         public boolean draw(Canvas canvas){
-            canvas.drawRect(x - rx, y - ry, x + rx, y + ry, paint);
+            canvas.drawRect(x - rx, y - ry, x + rx, y + ry, markerPaint);
             Path path = new Path();
             path.moveTo(x + rx,     y + ry);
             path.lineTo(x + rx + rx, y + ry + ry);
-            canvas.drawPath(path, paint);
+            canvas.drawPath(path, markerPaint);
             path.reset();
             path.moveTo(x + rx + rx, y + ry + ry);
             path.lineTo(x + l,     y + ry + ry);
-            canvas.drawPath(path, paint);
+            canvas.drawPath(path, markerPaint);
             //canvas.drawTextOnPath(String.format("  %03d%03d", x, y), path, 0, 0, paint);
-            canvas.drawText(String.format("  %03d%03d", x, y), x + rx + rx, y + ry + ry, paint);
+            canvas.drawText(String.format(" %03d%03d", x, y), x + ((l < 0) ? l : rx + rx), y + ry + ry, textPaint);
             return true;
         }
     }
