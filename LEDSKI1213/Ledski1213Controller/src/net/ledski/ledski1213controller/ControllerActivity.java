@@ -218,16 +218,16 @@ public class ControllerActivity extends Activity {
         private ArrayList<Byte> receivedMessageBuffer = new ArrayList<Byte>();
 
         public void registerSent(byte[] command){
-            mSendable = false;
+            /*mSendable = false;
             sendMessageBuffer.clear();
             receivedMessageBuffer.clear();
             for(int i = 0; i < command.length; ++i){
                 sendMessageBuffer.add(command[i]);
-            }
+            }*/
         }
 
         public void registerReceived(byte[] command){
-            if(mSendable){
+            /*if(mSendable){
                 return;
             }
             for(int i = 0; i < command.length; ++i){
@@ -245,7 +245,7 @@ public class ControllerActivity extends Activity {
             for(int i = 0; i < sendMessageBuffer.size(); ++i){
                 str += String.format("%02X ", receivedMessageBuffer.get(i));
             }
-            mEchoMonitorText.setText(str);
+            mEchoMonitorText.setText(str);*/
             mSendable = true;
         }
 
