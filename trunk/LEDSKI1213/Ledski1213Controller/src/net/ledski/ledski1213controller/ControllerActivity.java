@@ -48,7 +48,7 @@ public class ControllerActivity extends Activity {
     private TextView mEchoMonitorText;
     private TextView mBluetoothStatusText;
 
-    //private String[] mBehaviorButtonLavels = new String[]{"X連動","Y連動","Z連動","手動"};
+    private String[] mBehaviorButtonLavels = new String[]{" [手動]"," [デモ]"," [g-1ch]"," [g-2ch]", " [g-3ch]"};
 
     // Bluetooth
     private String               mConnectedDeviceName      = null; /**< Name of the connected device */
@@ -121,9 +121,9 @@ public class ControllerActivity extends Activity {
         mBlueSeekBar.setMax(255);
         mGammaSeekBar.setProgress(127);
         mGammaSeekBar.setMax(255);
-        mBehaviorRedButton.setText((mStateCtrlModeRed == 0x00 ? " [手動]": mStateCtrlModeRed == 0x01 ? " [デモ]" : " [加速度]"));
-        mBehaviorGreenButton.setText((mStateCtrlModeGreen == 0x00 ? " [手動]": mStateCtrlModeGreen == 0x01 ? " [デモ]" : " [加速度]"));
-        mBehaviorBlueButton.setText((mStateCtrlModeBlue == 0x00 ? " [手動]": mStateCtrlModeBlue == 0x01 ? " [デモ]" : " [加速度]"));
+        mBehaviorRedButton.setText(mBehaviorButtonLavels[mStateCtrlModeRed]);
+        mBehaviorGreenButton.setText(mBehaviorButtonLavels[mStateCtrlModeGreen]);
+        mBehaviorBlueButton.setText(mBehaviorButtonLavels[mStateCtrlModeBlue]);
         mPwmButton.setText(getString(R.string.label_button_pwm) + (mStateCtrlPwm ? " [動作中]" : " [停止中]"));
         mPowerButton.setText(getString(R.string.label_button_power) + (mStateCtrlPower ? " [ON]" : " [OFF]"));
 
@@ -355,7 +355,7 @@ public class ControllerActivity extends Activity {
             switch(view.getId()){
             case R.id.buttonRed:
                 mStateCtrlModeRed++;
-                if(mStateCtrlModeRed >= 3){
+                if(mStateCtrlModeRed >= mBehaviorButtonLavels.length){
                     mStateCtrlModeRed = 0;
                 }
                 stateCtrlMode = mStateCtrlModeRed;
@@ -364,7 +364,7 @@ public class ControllerActivity extends Activity {
                 break;
             case R.id.buttonGreen:
                 mStateCtrlModeGreen++;
-                if(mStateCtrlModeGreen >= 3){
+                if(mStateCtrlModeGreen >= mBehaviorButtonLavels.length){
                     mStateCtrlModeGreen = 0;
                 }
                 stateCtrlMode = mStateCtrlModeGreen;
@@ -373,7 +373,7 @@ public class ControllerActivity extends Activity {
                 break;
             case R.id.buttonBlue:
                 mStateCtrlModeBlue++;
-                if(mStateCtrlModeBlue >= 3){
+                if(mStateCtrlModeBlue >= mBehaviorButtonLavels.length){
                     mStateCtrlModeBlue = 0;
                 }
                 stateCtrlMode = mStateCtrlModeBlue;
@@ -383,13 +383,16 @@ public class ControllerActivity extends Activity {
             default:
                 return;
             }
-            String buttonLabel = (stateCtrlMode == 0 ? " [手動]": stateCtrlMode == 1 ? " [デモ]" : " [加速度]");
+            String buttonLabel = mBehaviorButtonLavels[stateCtrlMode];
             ((Button)view).setText(buttonLabel);
+
+            /* TODO seekBarの有効/無効化 */
 
             byte[] command = new byte[]{0x0, 0x0};
             command = new byte[]{0x0, 0x0};
             command[0] |= address;
-            command[1] |= (byte) (stateCtrlMode == 0 ? 0x00: stateCtrlMode == 1 ? 0x01 : 0x02);
+            command[1] |= (byte) stateCtrlMode;
+            sendCommand(command);
         }
     };
 
