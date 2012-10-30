@@ -312,6 +312,12 @@ public class ControllerActivity extends Activity {
         case R.id.menu_discoverable:
             // Ensure this device is discoverable by others
             ensureDiscoverable();
+            return true;
+        case R.id.menu_save_eeprom:
+            byte[] command = new byte[]{0x0};
+            command[0] |= (byte) 0xFF;
+            sendCommand(command);
+            return true;
         }
         return false;
     }
@@ -503,7 +509,7 @@ public class ControllerActivity extends Activity {
         }
 
         // Check that there's actually something to send
-        if (command.length > 1) {
+        if (command.length > 1 || command[0] == (byte)0xFF) {
             //for(int i = 0; command.length > i; ++i){
             //    command[i] |= 0x30;
             //}

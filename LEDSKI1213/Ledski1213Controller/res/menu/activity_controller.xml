@@ -7,8 +7,11 @@
      -->
     <item android:id="@+id/menu_scan"
           android:icon="@android:drawable/ic_menu_search"
-          android:title="@string/connect" />
+          android:title="@string/menu_connect" />
     <item android:id="@+id/menu_discoverable"
           android:icon="@android:drawable/ic_menu_mylocation"
-          android:title="@string/discoverable" />
+          android:title="@string/menu_discoverable" />
+    <item android:id="@+id/menu_save_eeprom"
+          android:icon="@android:drawable/ic_menu_save"
+          android:title="@string/menu_save_eeprom" />
 </menu>
