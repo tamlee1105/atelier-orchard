@@ -39,8 +39,9 @@
     <string name="button_scan">Scan for devices</string>
 
     <!-- Options Menu -->
-    <string name="connect">Connect a device</string>
-    <string name="discoverable">Make discoverable</string>
+    <string name="menu_connect">Connect a device</string>
+    <string name="menu_discoverable">Make discoverable</string>
+    <string name="menu_save_eeprom">save EEPROM</string>
 
     <!-- PreferenceActivity -->
     <string name="label_edit_power_on_command">点灯</string>
