@@ -89,7 +89,7 @@ public class ControllerActivity extends Activity {
         mBlueSeekBar         = (SeekBar) this.findViewById(R.id.seekBarBlue);
         //mAttSeekBar          = (SeekBar) this.findViewById(R.id.seekBarAtt);
         mGammaSeekBar          = (SeekBar) this.findViewById(R.id.seekBarGamma);
-        mEchoMonitorText       = (TextView) this.findViewById(R.id.textViewEchoMonitor);
+        //mEchoMonitorText       = (TextView) this.findViewById(R.id.textViewEchoMonitor);
         mBluetoothStatusText                 = (TextView) this.findViewById(R.id.textViewBluetoothStatus);
 
         // UIパーツリスナ登録
@@ -135,7 +135,6 @@ public class ControllerActivity extends Activity {
             finish();
             return;
         }
-
     }
 
     @Override
@@ -153,6 +152,23 @@ public class ControllerActivity extends Activity {
                 mChatService = new BluetoothChatService(this, mHandler);
             }
         }
+    }
+
+    @Override
+    public synchronized void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // Stop the Bluetooth chat services
+        if (mChatService != null) mChatService.stop();
     }
 
     // The Handler that gets information back from the BluetoothChatService
@@ -194,7 +210,7 @@ public class ControllerActivity extends Activity {
                     str += String.format("%02X ", readBuf[i]);
                 }
                 ///Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
-                mEchoMonitorText.setText(str);
+                //mEchoMonitorText.setText(str);
                 mCommandMarshaller.registerReceived(readBuf);
                 break;
             case MESSAGE_DEVICE_NAME:

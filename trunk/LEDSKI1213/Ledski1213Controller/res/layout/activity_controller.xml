@@ -178,6 +178,7 @@
         android:text="@string/label_button_reset" />
     -->
 
+    <!--
     <TextView
         android:id="@+id/textViewEchoMonitor"
         android:layout_width="match_parent"
@@ -185,5 +186,6 @@
         android:text="@string/label_text_echo_monitor"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:background="#666666"/>
+     -->
 </LinearLayout>
 
