@@ -45,7 +45,6 @@ public class ControllerActivity extends Activity {
     private SeekBar mBlueSeekBar;
     //private SeekBar mAttSeekBar;
     private SeekBar mGammaSeekBar;
-    private TextView mEchoMonitorText;
     private TextView mBluetoothStatusText;
 
     private String[] mBehaviorButtonLavels = new String[]{" [手動]"," [デモ]"," [g-1ch]"," [g-2ch]", " [g-3ch]"};
@@ -195,20 +194,20 @@ public class ControllerActivity extends Activity {
                 }
                 break;
             case MESSAGE_WRITE:
-                byte[] writeBuf = (byte[]) msg.obj;
+                //byte[] writeBuf = (byte[]) msg.obj;
                 // construct a string from the buffer
-                String writeMessage = new String(writeBuf);
+                //String writeMessage = new String(writeBuf);
                 //mConversationArrayAdapter.add("Me:  " + writeMessage);
                 break;
             case MESSAGE_READ:
                 byte[] readBuf = (byte[]) msg.obj;
                 // construct a string from the valid bytes in the buffer
-                String readMessage = new String(readBuf, 0, msg.arg1);
+                //String readMessage = new String(readBuf, 0, msg.arg1);
                 //mConversationArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
-                String str = String.format("[%2dbytes] ", readBuf.length);
-                for(int i = 0; i < readBuf.length; ++i){
-                    str += String.format("%02X ", readBuf[i]);
-                }
+                //String str = String.format("[%2dbytes] ", readBuf.length);
+                //for(int i = 0; i < readBuf.length; ++i){
+                //    str += String.format("%02X ", readBuf[i]);
+                //}
                 ///Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
                 //mEchoMonitorText.setText(str);
                 mCommandMarshaller.registerReceived(readBuf);
