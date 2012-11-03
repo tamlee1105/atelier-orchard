@@ -40,10 +40,10 @@ import android.util.Log;
 public class BluetoothChatService {
     // Debugging
     private static final String TAG = "BluetoothChatService";
-    private static final boolean D = true;
+    private static final boolean D = false;
 
     // Name for the SDP record when creating server socket
-    private static final String NAME = "BluetoothChat";
+    private static final String NAME = "LED_Ski_Controller";
 
     // Unique UUID for this application
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -251,7 +251,8 @@ public class BluetoothChatService {
                 try {
                     // This is a blocking call and will only return on a
                     // successful connection or an exception
-                    socket = mmServerSocket.accept();
+                    socket = mmServerSocket.accept(); // TODO fails while connection as java.io.IOException: Operation Canceled
+
                 } catch (IOException e) {
                     Log.e(TAG, "accept() failed", e);
                     break;
@@ -322,6 +323,12 @@ public class BluetoothChatService {
 
             // Always cancel discovery because it will slow down a connection
             mAdapter.cancelDiscovery();
+
+            //Set<BluetoothDevice> btdevs = mAdapter.getBondedDevices();
+            //Log.d(TAG, "bended devices: ");
+            //for(BluetoothDevice dev : btdevs){
+            //    Log.d(TAG, "   " + dev.getName());
+            //}
 
             // Make a connection to the BluetoothSocket
             try {
