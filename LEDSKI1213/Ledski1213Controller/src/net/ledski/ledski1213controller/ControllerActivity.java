@@ -211,6 +211,7 @@ public class ControllerActivity extends Activity {
                 ///Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
                 //mEchoMonitorText.setText(str);
                 mCommandMarshaller.registerReceived(readBuf);
+                mCommandBuffer.tryUnlock(readBuf);
                 break;
             case MESSAGE_DEVICE_NAME:
                 // save the connected device's name
@@ -491,6 +492,49 @@ public class ControllerActivity extends Activity {
             sendCommand(command);
         }
     };
+
+    private CommandBuffer mCommandBuffer = new CommandBuffer();
+    class CommandBuffer extends Thread{
+    	private ArrayList<byte[]> commands; // TODO FIFO
+    	private boolean sendable = true;
+
+    	CommandBuffer(){
+    		commands = new ArrayList<byte[]>();
+    	}
+
+    	@Override
+    	public void run(){ // TODO does this make sence?
+    		while(true){
+	    		if(sendable){
+	    			sendCommand(commands.remove(0));
+	    			if(commands.size() == 0){
+	    				this.stop(); // 空のときはスレッドストップ
+	    			}
+	    			sendable = false;
+	    		}else{
+
+	    		}
+    		}
+    	}
+
+    	public void addCommand(byte[] command){
+    		commands.add(command);
+    		//this.start(); // コマンドがあるときはスレッドをまわして送信する。
+    		//if(this.isAlive()){
+    		//
+    		//}
+    	}
+
+    	public void tryUnlock(byte[] read_buffer){
+    		if(read_buffer[0] == (byte)0xFF){
+    			this.forceUnlock();
+    		}
+    	}
+
+    	public void forceUnlock(){
+    		sendable = true;
+    	}
+    }
 
     private void sendCommand(byte[] command){
         if(mChatService == null){
