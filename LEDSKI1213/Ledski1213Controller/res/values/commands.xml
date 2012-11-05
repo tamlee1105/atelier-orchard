@@ -9,4 +9,5 @@
     <integer name="default_green_value_address">0x11</integer>
     <integer name="default_blue_value_address">0x12</integer>
     <integer name="default_gamma_address">0x20</integer>
+    <integer name="default_command_done">0xFF</integer>
 </resources>
