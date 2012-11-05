@@ -251,7 +251,7 @@ public class BluetoothChatService {
                 try {
                     // This is a blocking call and will only return on a
                     // successful connection or an exception
-                    socket = mmServerSocket.accept(); // TODO fails while connection as java.io.IOException: Operation Canceled
+                    socket = mmServerSocket.accept();
 
                 } catch (IOException e) {
                     Log.e(TAG, "accept() failed", e);

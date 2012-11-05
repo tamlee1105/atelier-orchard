@@ -70,6 +70,8 @@ public class ControllerActivity extends Activity {
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
 
+    private CommandBuffer mCommandBuffer = new CommandBuffer();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,20 +93,6 @@ public class ControllerActivity extends Activity {
         //mEchoMonitorText       = (TextView) this.findViewById(R.id.textViewEchoMonitor);
         mBluetoothStatusText                 = (TextView) this.findViewById(R.id.textViewBluetoothStatus);
 
-        // UIパーツリスナ登録
-        mPowerButton.setOnClickListener(mOnCtrlButtonClick);
-        mPwmButton.setOnClickListener(mOnCtrlButtonClick);
-        //mModeButton.setOnClickListener(mOnBehaviorButtonClick);
-        mBehaviorRedButton.setOnClickListener(mOnBehaviorButtonClick);
-        mBehaviorGreenButton.setOnClickListener(mOnBehaviorButtonClick);
-        mBehaviorBlueButton.setOnClickListener(mOnBehaviorButtonClick);
-        //mResetButton.setOnClickListener(mOnResetButtonClick);
-        mRedSeekBar.setOnSeekBarChangeListener(mOnRGBSeekBarChange);
-        mGreenSeekBar.setOnSeekBarChangeListener(mOnRGBSeekBarChange);
-        mBlueSeekBar.setOnSeekBarChangeListener(mOnRGBSeekBarChange);
-        mGammaSeekBar.setOnSeekBarChangeListener(mOnGammaSeekBarChange);
-        //mAttSeekBar.setOnSeekBarChangeListener(mOnATTSeekBarChange);
-
         // SharedPreferenceの読み込み
         //mShared = this.getSharedPreferences("shared", Context.MODE_PRIVATE);
 
@@ -125,6 +113,20 @@ public class ControllerActivity extends Activity {
         mBehaviorBlueButton.setText(mBehaviorButtonLavels[mStateCtrlModeBlue]);
         mPwmButton.setText(getString(R.string.label_button_pwm) + (mStateCtrlPwm ? " [動作中]" : " [停止中]"));
         mPowerButton.setText(getString(R.string.label_button_power) + (mStateCtrlPower ? " [ON]" : " [OFF]"));
+
+        // UIパーツリスナ登録
+        mPowerButton.setOnClickListener(mOnCtrlButtonClick);
+        mPwmButton.setOnClickListener(mOnCtrlButtonClick);
+        //mModeButton.setOnClickListener(mOnBehaviorButtonClick);
+        mBehaviorRedButton.setOnClickListener(mOnBehaviorButtonClick);
+        mBehaviorGreenButton.setOnClickListener(mOnBehaviorButtonClick);
+        mBehaviorBlueButton.setOnClickListener(mOnBehaviorButtonClick);
+        //mResetButton.setOnClickListener(mOnResetButtonClick);
+        mRedSeekBar.setOnSeekBarChangeListener(mOnRGBSeekBarChange);
+        mGreenSeekBar.setOnSeekBarChangeListener(mOnRGBSeekBarChange);
+        mBlueSeekBar.setOnSeekBarChangeListener(mOnRGBSeekBarChange);
+        mGammaSeekBar.setOnSeekBarChangeListener(mOnGammaSeekBarChange);
+        //mAttSeekBar.setOnSeekBarChangeListener(mOnATTSeekBarChange);
 
         // Get local Bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -151,6 +153,9 @@ public class ControllerActivity extends Activity {
                 mChatService = new BluetoothChatService(this, mHandler);
             }
         }
+
+
+        mCommandBuffer.start();
     }
 
     @Override
@@ -160,6 +165,12 @@ public class ControllerActivity extends Activity {
 
     @Override
     public void onStop() {
+        /*try {
+            mCommandBuffer.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
+        mCommandBuffer.stopRunning();
         super.onStop();
     }
 
@@ -195,22 +206,9 @@ public class ControllerActivity extends Activity {
                 break;
             case MESSAGE_WRITE:
                 //byte[] writeBuf = (byte[]) msg.obj;
-                // construct a string from the buffer
-                //String writeMessage = new String(writeBuf);
-                //mConversationArrayAdapter.add("Me:  " + writeMessage);
                 break;
             case MESSAGE_READ:
                 byte[] readBuf = (byte[]) msg.obj;
-                // construct a string from the valid bytes in the buffer
-                //String readMessage = new String(readBuf, 0, msg.arg1);
-                //mConversationArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
-                //String str = String.format("[%2dbytes] ", readBuf.length);
-                //for(int i = 0; i < readBuf.length; ++i){
-                //    str += String.format("%02X ", readBuf[i]);
-                //}
-                ///Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
-                //mEchoMonitorText.setText(str);
-                mCommandMarshaller.registerReceived(readBuf);
                 mCommandBuffer.tryUnlock(readBuf);
                 break;
             case MESSAGE_DEVICE_NAME:
@@ -226,50 +224,6 @@ public class ControllerActivity extends Activity {
             }
         }
     };
-
-    /**  */
-    private class CommandMarshaller {
-        private boolean mSendable = true;
-        private ArrayList<Byte> sendMessageBuffer = new ArrayList<Byte>();
-        private ArrayList<Byte> receivedMessageBuffer = new ArrayList<Byte>();
-
-        public void registerSent(byte[] command){
-            /*mSendable = false;
-            sendMessageBuffer.clear();
-            receivedMessageBuffer.clear();
-            for(int i = 0; i < command.length; ++i){
-                sendMessageBuffer.add(command[i]);
-            }*/
-        }
-
-        public void registerReceived(byte[] command){
-            /*if(mSendable){
-                return;
-            }
-            for(int i = 0; i < command.length; ++i){
-                receivedMessageBuffer.add(command[i]);
-            }
-            //if(receivedMessageBuffer.size() != sendMessageBuffer.size()){
-            //    return;
-            //}
-            for(int i = 0; i < sendMessageBuffer.size(); ++i){
-                if(receivedMessageBuffer.get(i) != sendMessageBuffer.get(i)){
-                    return;
-                }
-            }
-            String str = "";
-            for(int i = 0; i < sendMessageBuffer.size(); ++i){
-                str += String.format("%02X ", receivedMessageBuffer.get(i));
-            }
-            mEchoMonitorText.setText(str);*/
-            mSendable = true;
-        }
-
-        public boolean confirmSendable(){
-            return mSendable;
-        }
-    }
-    private CommandMarshaller mCommandMarshaller = new CommandMarshaller();
 
     @Override
     public synchronized void onResume() {
@@ -316,7 +270,7 @@ public class ControllerActivity extends Activity {
         case R.id.menu_save_eeprom:
             byte[] command = new byte[]{0x0};
             command[0] |= (byte) 0xFF;
-            sendCommand(command);
+            mCommandBuffer.addCommand(command);
             return true;
         }
         return false;
@@ -363,7 +317,7 @@ public class ControllerActivity extends Activity {
             //command[1] |= (mStateCtrlMode == 0 ? 0: mStateCtrlMode == 1 ? 1 : 2) << 2; // 0: manual, 1: demo, 2: g
             command[1] |= (mStateCtrlPwm ? 1 : 0) << 1;
             command[1] |= (mStateCtrlPower ? 1 : 0) << 0;
-            sendCommand(command);
+            mCommandBuffer.addCommand(command);
         }
     };
 
@@ -414,7 +368,7 @@ public class ControllerActivity extends Activity {
             command = new byte[]{0x0, 0x0};
             command[0] |= address;
             command[1] |= (byte) stateCtrlMode;
-            sendCommand(command);
+            mCommandBuffer.addCommand(command);
         }
     };
 
@@ -468,7 +422,7 @@ public class ControllerActivity extends Activity {
             byte[] command = new byte[]{0x0, 0x0};
             command[0] |= address;
             command[1] |= (byte) progress;
-            sendCommand(command);
+            mCommandBuffer.addCommand(command);
         }
     };
 
@@ -489,51 +443,56 @@ public class ControllerActivity extends Activity {
             byte[] command = new byte[]{0x0, 0x0};
             command[0] |= (byte) getResources().getInteger(R.integer.default_gamma_address);
             command[1] |= (byte) progress;
-            sendCommand(command);
+            mCommandBuffer.addCommand(command);
         }
     };
 
-    private CommandBuffer mCommandBuffer = new CommandBuffer();
     class CommandBuffer extends Thread{
-    	private ArrayList<byte[]> commands; // TODO FIFO
-    	private boolean sendable = true;
+        private ArrayList<byte[]> commands;
+        private boolean sendable;
+        private boolean running;
 
-    	CommandBuffer(){
-    		commands = new ArrayList<byte[]>();
-    	}
+        CommandBuffer(){
+            commands = new ArrayList<byte[]>();
+        }
 
-    	@Override
-    	public void run(){ // TODO does this make sence?
-    		while(true){
-	    		if(sendable){
-	    			sendCommand(commands.remove(0));
-	    			if(commands.size() == 0){
-	    				this.stop(); // 空のときはスレッドストップ
-	    			}
-	    			sendable = false;
-	    		}else{
+        @Override
+        public void start(){
+            sendable = true;
+            running = true;
+            new Thread(this).start();
+        }
 
-	    		}
-    		}
-    	}
+        @Override
+        public void run(){
+            while(running){
+                while(commands.size() > 0){
+                    if(sendable){
+                        sendCommand(commands.remove(0));
+                        this.forceUnlocked(false);
+                    }
+                }
+            }
+        }
 
-    	public void addCommand(byte[] command){
-    		commands.add(command);
-    		//this.start(); // コマンドがあるときはスレッドをまわして送信する。
-    		//if(this.isAlive()){
-    		//
-    		//}
-    	}
+        public synchronized void addCommand(byte[] command){
+            commands.add(command);
+        }
 
-    	public void tryUnlock(byte[] read_buffer){
-    		if(read_buffer[0] == (byte)0xFF){
-    			this.forceUnlock();
-    		}
-    	}
+        public void tryUnlock(byte[] read_buffer){
+            if(read_buffer[0] == (byte) getResources().getInteger(R.integer.default_command_done)){
+                this.forceUnlocked(true);
+            }
+        }
 
-    	public void forceUnlock(){
-    		sendable = true;
-    	}
+        public synchronized void forceUnlocked(boolean b){
+            sendable = b;
+        }
+
+        public synchronized void stopRunning(){
+            this.commands.clear(); // 本当はjoinしたいが…
+            this.running = false;
+        }
     }
 
     private void sendCommand(byte[] command){
@@ -541,13 +500,9 @@ public class ControllerActivity extends Activity {
             return;
         }
 
-        if(mCommandMarshaller.confirmSendable() == false){
-            return;
-        }
-
         // Check that we're actually connected before trying anything
         if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED) {
-            Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show(); // TODO when close: java.lang.RuntimeException: Can't create handler inside thread that has not called Looper.prepare()
             return;
         }
 
@@ -558,7 +513,6 @@ public class ControllerActivity extends Activity {
             //}
             // Get the message bytes and tell the BluetoothChatService to write
             mChatService.write(command);
-            mCommandMarshaller.registerSent(command);
         }
     }
 
@@ -609,41 +563,41 @@ public class ControllerActivity extends Activity {
         //command[1] |= (mStateCtrlMode == 0 ? 0x00: mStateCtrlMode == 1 ? 0x01 : 0x02) << 2; // 0: manual, 1: demo, 2: g
         command[1] |= (mStateCtrlPwm ? 0x01 : 0x00) << 1;
         command[1] |= (mStateCtrlPower ? 0x01 : 0x00) << 0;
-        sendCommand(command);
+        mCommandBuffer.addCommand(command);
 
         command = new byte[]{0x0, 0x0};
         command[0] |= (byte) getResources().getInteger(R.integer.default_red_mode_address);
         command[1] |= (byte) (mStateCtrlModeRed == 0 ? 0x00: mStateCtrlModeRed == 1 ? 0x01 : 0x02);
-        sendCommand(command);
+        mCommandBuffer.addCommand(command);
 
         command = new byte[]{0x0, 0x0};
         command[0] |= (byte) getResources().getInteger(R.integer.default_green_mode_address);
         command[1] |= (byte) (mStateCtrlModeGreen == 0 ? 0x00: mStateCtrlModeGreen == 1 ? 0x01 : 0x02);
-        sendCommand(command);
+        mCommandBuffer.addCommand(command);
 
         command = new byte[]{0x0, 0x0};
         command[0] |= (byte) getResources().getInteger(R.integer.default_blue_mode_address);
         command[1] |= (byte) (mStateCtrlModeBlue == 0 ? 0x00: mStateCtrlModeBlue == 1 ? 0x01 : 0x02);
-        sendCommand(command);
+        mCommandBuffer.addCommand(command);
 
         command = new byte[]{0x0, 0x0};
         command[0] |= (byte) getResources().getInteger(R.integer.default_red_value_address);
         command[1] |= (byte) mRedSeekBar.getProgress();
-        sendCommand(command);
+        mCommandBuffer.addCommand(command);
 
         command = new byte[]{0x0, 0x0};
         command[0] |= (byte) getResources().getInteger(R.integer.default_green_value_address);
         command[1] |= (byte) mGreenSeekBar.getProgress();
-        sendCommand(command);
+        mCommandBuffer.addCommand(command);
 
         command = new byte[]{0x0, 0x0};
         command[0] |= (byte) getResources().getInteger(R.integer.default_blue_value_address);
         command[1] |= (byte) mBlueSeekBar.getProgress();
-        sendCommand(command);
+        mCommandBuffer.addCommand(command);
 
         command = new byte[]{0x0, 0x0};
         command[0] |= (byte) getResources().getInteger(R.integer.default_gamma_address);
         command[1] |= (byte) mGammaSeekBar.getProgress();
-        sendCommand(command);
+        mCommandBuffer.addCommand(command);
     }
 }
