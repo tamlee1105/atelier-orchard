@@ -6,8 +6,10 @@ void setup()
 {
   size(640, 480);
   background(0);
-  println(Capture.list());
-  capture = new Capture(this, width, height);
+  String[] cameras = Capture.list();
+  println(cameras);
+  capture = new Capture(this, cameras[0]);
+  capture.start();
   frameRate(30);
 }
 
