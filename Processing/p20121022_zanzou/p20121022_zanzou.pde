@@ -29,10 +29,17 @@ void draw()
       //curveBlack.apply(capture, prevFrame, W, H);
     }
     image(capture, 0, 0);
-    //capture.blend(prevFrame, 0, 0, W, H, 0, 0, W, H, LIGHTEST);
-    ablend(prevFrame, capture, W, H);
+    curveBlack.apply(capture, capture, W, H);
+    //ablend(prevFrame, capture, W, H);
+    prevFrame.blend(capture, 0, 0, W, H, 0, 0, W, H, LIGHTEST);
+    for(int xx = 0; xx < W; ++xx){
+      for(int yy = 0; yy < H; ++yy){
+        int px = prevFrame.get(xx, yy);
+        color c = color(hue(px), saturation(px), ((int)brightness(px)) - 4); // hsv
+        prevFrame.set(xx, yy, c);
+      }
+    }
     image(prevFrame, W, 0);
-    //curveBlack.apply(prevFrame, prevFrame, W, H);
   }
 }
 
@@ -52,13 +59,14 @@ void ablend(PImage dst, PImage src, int w, int h){
 
 class ToneCurve {
   int[] curve = new int[256];
-  void ToneCurve(){
+  ToneCurve(){
       for(int i = 0; i < 256; ++i){
         int val0 = i < 128 ? 0 : i * 2 - 255; // コールバック化したい
         //int val0 = 127 + (i >> 1); 
         //int val0 = i; 
         int val1 = (int) (val0 < 0 ? 0 : val0 > 255 ? 255 : val0);
-        curve[i] = val1;
+        //println(String.format("[%3d] 0x%08X 0x%08X", i, val0, val1));
+        curve[i] = val0;
       }
   }
   
@@ -72,6 +80,7 @@ class ToneCurve {
       for(int yy = 0; yy < h; ++yy){
         int px = src.get(xx, yy);
         color c = color(hue(px), saturation(px), (float)process((int)brightness(px)), 255); // hsv
+        //println(String.format("0x%08X 0x%02X 0x%02X 0x%08X", px, (int)brightness(px), process((int)brightness(px)), c));
         dst.set(xx, yy, c);
       }
     }
