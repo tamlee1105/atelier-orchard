@@ -15,13 +15,11 @@ void setup()
   capture = new Capture(this, cameras[0]);
   capture.start();
   frameRate(30);
-  t = System.currentTimeMillis();
 }
 
 long t = 0;
 void draw()
 {
-  println("" + (System.currentTimeMillis() - t));
   t = System.currentTimeMillis();
   if (capture.available()){
     capture.read();
@@ -31,6 +29,7 @@ void draw()
     image(capture, 0, 0);
     image(filter.process(capture), W, 0);
   }
+  println("" + (System.currentTimeMillis() - t));
 }
 
 /*void ablend(PImage dst, PImage src, int w, int h){
