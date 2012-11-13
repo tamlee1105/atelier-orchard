@@ -8,24 +8,28 @@ ZanzouFilter filter = null;
 void setup()
 {
   size(W * 2, H);
-  colorMode(HSB, 255);
+  colorMode(RGB, 255);
   background(0);
   String[] cameras = Capture.list();
   println(cameras);
   capture = new Capture(this, cameras[0]);
   capture.start();
   frameRate(30);
+  t = System.currentTimeMillis();
 }
 
+long t = 0;
 void draw()
 {
+  println("" + (System.currentTimeMillis() - t));
+  t = System.currentTimeMillis();
   if (capture.available()){
     capture.read();
     if(filter == null){
       filter = new ZanzouFilter(capture, W, H);
     }
     image(capture, 0, 0);
-    image(filter(capture), W, 0);
+    image(filter.process(capture), W, 0);
   }
 }
 
@@ -48,7 +52,7 @@ class ZanzouFilter {
   int[]  mCurveHighPass = new int [256];
   int w = 0, h = 0;
   
-  Zanzou(PImage initial_frame, int w, int h){
+  ZanzouFilter(PImage initial_frame, int w, int h){
     this.w = w;
     this.h = h;
     
@@ -62,7 +66,7 @@ class ZanzouFilter {
     
     // initialization of the prev frame buffer
     mPrevFrame = new PImage(w, h);
-    mPrevFrame = copy(initial_frame, 0, 0, w, h, 0, 0, w, h);
+    mPrevFrame.copy(initial_frame, 0, 0, w, h, 0, 0, w, h);
   }
   
   public PImage process(PImage curr_frame){
@@ -70,10 +74,16 @@ class ZanzouFilter {
       for(int yy = 0; yy < h; ++yy){
         int src = curr_frame.get(xx, yy);
         int dst = mPrevFrame.get(xx, yy);
-        float src_b = (float)mPrevFrame[(int)brightness(src)]; // tone curve
-        color c = (brightness(dst) > src_b) ? 
-          color(hue(dst), saturation(dst), brightness(dst) - 4) : 
-          color(hue(src), saturation(src), src_b - 4); // lighten and att
+        int src_r = mCurveHighPass[(int)red(src)]; // tone curve
+        int src_g = mCurveHighPass[(int)green(src)]; // tone curve
+        int src_b = mCurveHighPass[(int)blue(src)]; // tone curve
+        int dst_r = (int)red(dst);
+        int dst_g = (int)green(dst);
+        int dst_b = (int)blue(dst);
+        color c = color(
+          (src_r > dst_r ? src_r : dst_r) - 0f,
+          (src_g > dst_g ? src_g : dst_g) - 0f,
+          (src_b > dst_b ? src_b : dst_b) - 0f); // lighten and att
         //println(String.format("0x%08X 0x%02X 0x%02X 0x%08X", px, (int)brightness(px), process((int)brightness(px)), c));
         mPrevFrame.set(xx, yy, c);
       }
