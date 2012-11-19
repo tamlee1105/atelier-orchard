@@ -3,7 +3,7 @@
 
 void setup()
 {
-  //pinMode(d_in_photo, INPUT);
+  pinMode(d_in_photo, INPUT);
   Serial.begin(9600);
 }
 
