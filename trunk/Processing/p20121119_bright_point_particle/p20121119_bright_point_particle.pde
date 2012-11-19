@@ -3,6 +3,8 @@ import processing.video.*;
 final int OCCURRENCE    = 1;
 final int BRIGHNESS_TH  = 253;
 final int PARTICLES_LIM = 50;
+final int PIXEL_PITCH   = 4;
+final int FRAME_PITCH   = 2;
 
 OutputFrame outputFrame = null;
 
@@ -30,7 +32,7 @@ void draw()
       outputFrame = new OutputFrame(capture, W, H);
     }
     //image(capture, 0, 0);
-    image(outputFrame.drawFrame(capture), 0, 0);
+    image(outputFrame.drawFrame(capture, frameCount), 0, 0);
   }
   println("" + (System.currentTimeMillis() - t));
 }
@@ -67,15 +69,17 @@ class OutputFrame{
     //frame = createImage(w, h, RGB);
   }
   
-  public PImage drawFrame(PImage curr_frame){
+  public PImage drawFrame(PImage curr_frame, int frame_count){
     //frame.background(0);
     // 各画素の輝度を評価して必要ならパーティクル追加
-    for(int px = 0; px < w; ++px){
-      for(int py = 0; py < h; ++py){
-        if(particles.size() < PARTICLES_LIM){
-          if(BRIGHNESS_TH < brightness(curr_frame.get(px, py))){
-            if(random(100) < OCCURRENCE){
-              particles.add(new Particle(loadImage("heart.png"), px, py));
+    if(frame_count % frameCount == 0){
+      for(int px = random(PIXEL_PITCH); px < w; px+=PIXEL_PITCH){
+        for(int py = random(PIXEL_PITCH); py < h; py+=PIXEL_PITCH){
+          if(particles.size() < PARTICLES_LIM){
+            if(BRIGHNESS_TH < brightness(curr_frame.get(px, py))){
+              if(random(100) < OCCURRENCE){
+                particles.add(new Particle(loadImage("heart.png"), px, py));
+              }
             }
           }
         }
