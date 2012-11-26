@@ -75,7 +75,7 @@ class OutputFrame{
         for(int px = (int)random(PIXEL_PITCH); px < w; px+=PIXEL_PITCH){
           if(particles.size() < PARTICLES_LIM){
             if(random(10000) < OCCURRENCE){
-              particles.add(new Particle(tex(), px, py));
+              particles.add(new Particle(tex(), px, py)); // TODO: mask -> arg
             }
           }
         }
@@ -97,14 +97,30 @@ class OutputFrame{
   }
 }
 
-PImage tex(){
-  PImage tex = createImage(20, 20, RGB);
-  for(int py = 0; py < tex.height; ++py){
-    for(int px = 0; px < tex.width; ++px){
+PImage mask(int w, int h){
+  PImage mask = createImage(w, h, RGB);
+  for(int py = 0; py < h; ++py){
+    for(int px = 0; px < w; ++px){
+      int r = 127;
+      int g = r;
+      int b = r;
+      // TODO: shape
+      mask.set(px, py, color(r, g, b));
+    }
+  }
+  mask.filter(BLUR);
+  return mask;
+}
+
+PImage tex(PImage mask, int w, int h){
+  PImage tex = createImage(w, h, RGB);
+  for(int py = 0; py < h; ++py){
+    for(int px = 0; px < w; ++px){
       int r = 127;
       int g = r;
       int b = r;
       tex.set(px, py, color(r, g, b));
+      // TODO: apply mask
     }
   }
   return tex;
