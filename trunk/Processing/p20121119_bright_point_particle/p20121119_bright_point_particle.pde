@@ -48,14 +48,21 @@ void draw()
 }
 
 class Particle{
+  PImage texs[] = PImage[4];
   PImage tex;
+  int tex_idx, inc;
   float px, py;
   float vx, vy;
   float ax, ay;
   
   Particle(PImage tex, int px, int py){
-    this.tex = tex;
-    this.tex.filter(BLUR);
+    for(int i = 0; i < texs.length; ++i){
+      this.texs[i] = createImage((int)(tex.width * (1f + 0.1f * i)), (int)(tex.height * (1f + 0.1f * i)), ARGB);
+      this.texs[i].copy(tex, 0, 0, tex.width, tex.height, 0, 0, this.texs[i].width, this.texs[i].height);
+      this.texs[i].filter(BLUR);
+    }
+    this.tex_idx = 0;
+    this.inc = 1;
     this.px = px;
     this.py = py;
     this.vx = random(-5, 5);
@@ -69,6 +76,12 @@ class Particle{
     py += vy;
     vx += ax;
     vy += ay;
+    if(tex_idx >= texs.length - 1){
+      inc = -1;
+    }else if(tex_idx <= 0){
+      inc = +1;
+    }
+    tex = texs[tex_idx += inc];
     if(px < 0 || px > W || py < 0 || py > H){
       return false;
     }
